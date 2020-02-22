@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonCTR
 {
@@ -123,13 +120,85 @@ namespace PokemonCTR
                 for (i = 0; i < fatbHeader.num_entries; i++)
                 {
                     uint fileLength = fatbEntries[i].file_to_offset - fatbEntries[i].file_from_offset;
-                    if (fntbHeader.unknown0 == 8)
-                    {
-                        br.BaseStream.Position = positon + fatbEntries[i].file_from_offset;
-                        Files.Add(br.ReadBytes((int)fileLength));
-                    }
+                    br.BaseStream.Position = positon + fatbEntries[i].file_from_offset;
+                    Files.Add(br.ReadBytes((int)fileLength));
                 }
                 br.Close();
+            }
+        }
+
+        public bool Save (string path)
+        {
+            try
+            {
+                BinaryWriter br = new BinaryWriter(File.Create(path));
+                int i;
+                uint position = 0;
+                for (i = 0; i < fatbHeader.num_entries; i++)
+                {
+                    fatbEntries[i].file_from_offset = position;
+                    fatbEntries[i].file_to_offset = position + (uint)Files[i].Length;
+                    position += (uint)Files[i].Length;
+                }
+                position = (position + 15) / 16 * 16;
+                fimgHeader.length = position - 8;
+                narcHeader.file_size = narcHeader.length + fatbHeader.length + fntbHeader.length + position;
+                /* NarcHeader */
+                br.Write(narcHeader.id);
+                br.Write(narcHeader.id0);
+                br.Write(narcHeader.id1);
+                br.Write(narcHeader.file_size);
+                br.Write(narcHeader.length);
+                br.Write(narcHeader.num_sections);
+                /* FatbHeader */
+                br.Write(fatbHeader.id);
+                br.Write(fatbHeader.length);
+                br.Write(fatbHeader.num_entries);
+                /* FatbEntries */
+                for (i = 0; i < fatbHeader.num_entries; i++)
+                {
+                    br.Write(fatbEntries[i].file_from_offset);
+                    br.Write(fatbEntries[i].file_to_offset);
+                }
+                /* FntbHeader */
+                br.Write(fntbHeader.id);
+                br.Write(fntbHeader.length);
+                br.Write(fntbHeader.unknown0);
+                br.Write(fntbHeader.unknown1);
+                /* FntbEntries */
+                if (fntbHeader.unknown0 == 8)
+                {
+                    for (i = 0; i < fatbHeader.num_entries; i++)
+                    {
+                        br.Write(fntbEntries[i].name_length);
+                        br.Write(fntbEntries[i].name, 0, fntbEntries[i].name_length);
+                    }
+                    br.Write((byte)0);
+                    while (br.BaseStream.Position < narcHeader.length + fatbHeader.length + fntbHeader.length)
+                    {
+                        br.Write((byte)255);
+                    }
+                }
+                br.BaseStream.Position = narcHeader.length + fatbHeader.length + fntbHeader.length;
+                /* FimgHeader */
+                br.Write(fimgHeader.id);
+                br.Write(fimgHeader.length);
+                /* Files */
+                for (i = 0; i < fatbHeader.num_entries; i++)
+                {
+                    br.Write(Files[i]);
+                }
+                while (br.BaseStream.Position < narcHeader.file_size)
+                {
+                    br.Write((byte)255);
+                }
+                br.Close();
+                return true;
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
             }
         }
     }

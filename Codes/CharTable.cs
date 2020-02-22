@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -8,6 +9,8 @@ namespace PokemonCTR
     {
         private readonly char[] CharTableArray = new char[65536];
         private readonly int[] CharTableArrayRev = new int[65536];
+        public readonly List<char> NoCode = new List<char>();
+        public readonly List<int> NoChar = new List<int>();
         public int maxCharCode;
 
         /// <summary>
@@ -42,9 +45,17 @@ namespace PokemonCTR
         public char GetCharacter(int i)
         {
             if (CharTableArray[i] > 0)
+            {
                 return CharTableArray[i];
+            }
             else
+            {
+                if (i > 0 && !NoChar.Contains(i))
+                {
+                    NoChar.Add(i);
+                }
                 return '\0';
+            }
         }
 
         /// <summary>
@@ -55,9 +66,17 @@ namespace PokemonCTR
         public int WriteCharacter(char c)
         {
             if (CharTableArrayRev[c] > 0)
+            {
                 return CharTableArrayRev[c];
+            }
             else
+            {
+                if (c > 0 && !NoCode.Contains(c))
+                {
+                    NoCode.Add(c);
+                }
                 return 0;
+            }
         }
     }
 }
