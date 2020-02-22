@@ -20,7 +20,7 @@ namespace NARCFileReadingDLL
     private byte m_bKerning;
     private byte m_bBitsPerPixel;
     private byte m_bOrientation;
-    private List<CGLPFrame.Character> m_lstcharCharacters;
+    private List<Character> m_lstcharCharacters;
 
     public CGLPFrame(BinaryReader brrReader)
       : base(brrReader)
@@ -82,7 +82,7 @@ namespace NARCFileReadingDLL
       brwWriter.Write(m_bKerning);
       brwWriter.Write(m_bBitsPerPixel);
       brwWriter.Write(m_bOrientation);
-      foreach (CGLPFrame.Character lstcharCharacter in m_lstcharCharacters)
+      foreach (Character lstcharCharacter in m_lstcharCharacters)
         lstcharCharacter.WriteTo(brwWriter);
       brwWriter.BaseStream.Position = 0L;
       return new BinaryReader(brwWriter.BaseStream).ReadBytes((int) brwWriter.BaseStream.Length);
@@ -100,14 +100,14 @@ namespace NARCFileReadingDLL
             m_bOrientation = brrReader.ReadByte();
       if ((brrReader.BaseStream.Length - brrReader.BaseStream.Position) % m_ushLength != 0L)
         throw new FormatException();
-            m_lstcharCharacters = new List<CGLPFrame.Character>((int) (brrReader.BaseStream.Length - brrReader.BaseStream.Position) / m_ushLength);
+            m_lstcharCharacters = new List<Character>((int) (brrReader.BaseStream.Length - brrReader.BaseStream.Position) / m_ushLength);
       for (int index = 0; index < m_lstcharCharacters.Capacity; ++index)
-                m_lstcharCharacters.Add(new CGLPFrame.Character(brrReader, m_ushLength, m_bMaxWidth, m_bHeight, m_bBitsPerPixel));
+                m_lstcharCharacters.Add(new Character(brrReader, m_ushLength, m_bMaxWidth, m_bHeight, m_bBitsPerPixel));
     }
 
     public void AddNewItem()
     {
-            m_lstcharCharacters.Add(new CGLPFrame.Character(m_bMaxWidth, m_bHeight, m_bBitsPerPixel));
+            m_lstcharCharacters.Add(new Character(m_bMaxWidth, m_bHeight, m_bBitsPerPixel));
     }
 
     public class Character : IFontTableItem, IContainsSpaceWidth
@@ -116,9 +116,9 @@ namespace NARCFileReadingDLL
       private byte m_bySpaceWidth;
       private byte m_byWidth;
       private byte m_byUnknown;
-      private byte m_byMaxWidth;
-      private byte m_byMaxHeight;
-      private byte m_byBPP;
+      private readonly byte m_byMaxWidth;
+      private readonly byte m_byMaxHeight;
+      private readonly byte m_byBPP;
 
       public Character(byte byMaxWidth, byte byMaxHeight, byte byBPP)
       {

@@ -12,8 +12,8 @@ namespace NARCFileReadingDLL
 {
     public class SimpleFontTable : FIMGFrame.FileImageEntryBase, IFontTable
     {
-        private int chineseMaxChar = 0x119D;
-        private int originalMaxChar = 0x01FD;
+        private readonly int chineseMaxChar = 0x119D;
+        private readonly int originalMaxChar = 0x01FD;
         private const int MAX_HEIGHT = 16;
         private int m_nHeaderSize;
         private int m_nTableSize;
@@ -22,7 +22,7 @@ namespace NARCFileReadingDLL
         private byte m_bHeight;
         private byte m_bBitsPerPixel;
         private byte m_bOrientation;
-        private List<FontTableItem> m_lstftiItems = new List<FontTableItem>();
+        private readonly List<FontTableItem> m_lstftiItems = new List<FontTableItem>();
 
         public SimpleFontTable(BinaryReader brrReader)
         {
@@ -101,8 +101,7 @@ namespace NARCFileReadingDLL
             foreach (FontTableItem lstftiItem in m_lstftiItems)
                 lstftiItem.WriteTo(brwWriter);
             int TableSize = (int)brwWriter.BaseStream.Position;
-            int pos = 0;
-            for (pos = 0; pos < originalMaxChar; pos++)
+            for (int pos = 0; pos < originalMaxChar; pos++)
             {
                 m_lstftiItems[pos].WriteWidthTo(brwWriter);
             }

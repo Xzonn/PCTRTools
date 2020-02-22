@@ -13,14 +13,14 @@ namespace NARCFileReadingDLL
     public class FIMGFrame : NARCFileFrame
     {
         public const string MAGIC = "FIMG";
-        private List<FIMGFrame.FileImageEntryBase> m_lstfimgeEntries;
+        private readonly List<FileImageEntryBase> m_lstfimgeEntries;
 
         public FIMGFrame(BinaryReader brrReader, int nSize, params object[] args)
         {
             FATBFrame fatbFrame = (FATBFrame)args[0];
             if (nSize < 0 || nSize > 0 && fatbFrame.FilesCount == 0)
                 throw new FormatException();
-            m_lstfimgeEntries = new List<FIMGFrame.FileImageEntryBase>(fatbFrame.FilesCount);
+            m_lstfimgeEntries = new List<FileImageEntryBase>(fatbFrame.FilesCount);
             int position = (int)brrReader.BaseStream.Position;
             int num = 0;
             int tempNum = 0;
@@ -30,7 +30,7 @@ namespace NARCFileReadingDLL
                 //if (tempNum > 4) break;
                 if (entry.Start != brrReader.BaseStream.Position - position)
                     throw new FormatException();
-                FIMGFrame.FileImageEntryBase fileImageEntryBase = null;
+                FileImageEntryBase fileImageEntryBase = null;
                 foreach (byte readByte in brrReader.ReadBytes(4))
                 {
                     if (readByte < 65 || readByte > 90)
@@ -65,7 +65,7 @@ namespace NARCFileReadingDLL
                     }
                     ++num;
                 }
-                fileImageEntryBase.Changed += new FIMGFrame.FileImageEntryBase.FileChanged(entry.FileChanged);
+                fileImageEntryBase.Changed += new FileImageEntryBase.FileChanged(entry.FileChanged);
                 while ((brrReader.BaseStream.Position - position) % 4L != 0L)
                 {
                     if (brrReader.ReadByte() != byte.MaxValue)
@@ -101,7 +101,7 @@ namespace NARCFileReadingDLL
             }
         }
 
-        public List<FIMGFrame.FileImageEntryBase> Entries
+        public List<FileImageEntryBase> Entries
         {
             get
             {
@@ -112,7 +112,7 @@ namespace NARCFileReadingDLL
         protected override void WriteContentTo(BinaryWriter brwWriter)
         {
             int position = (int)brwWriter.BaseStream.Position;
-            foreach (FIMGFrame.FileImageEntryBase lstfimgeEntry in m_lstfimgeEntries)
+            foreach (FileImageEntryBase lstfimgeEntry in m_lstfimgeEntries)
             {
                 lstfimgeEntry.WriteTo(brwWriter);
                 while ((brwWriter.BaseStream.Length - position) % 4L != 0L)
@@ -122,9 +122,9 @@ namespace NARCFileReadingDLL
 
         public abstract class FileImageEntryBase : INintendoDataItem, INintendoItem
         {
-            protected FIMGFrame.FileImageEntryBase.FileChanged m_fcFileChanged;
+            protected FileChanged m_fcFileChanged;
 
-            public event FIMGFrame.FileImageEntryBase.FileChanged Changed
+            public event FileChanged Changed
             {
                 add
                 {
@@ -159,7 +159,7 @@ namespace NARCFileReadingDLL
                 }
             }
 
-            public void Copy(FIMGFrame.FileImageEntryBase fimgEntry)
+            public void Copy(FileImageEntryBase fimgEntry)
             {
                 ReadFrom(new BinaryReader(new ByteArrayStream(fimgEntry.File)));
             }
@@ -168,7 +168,7 @@ namespace NARCFileReadingDLL
 
             public abstract void WriteTo(BinaryWriter brwWriter);
 
-            public delegate void FileChanged(FIMGFrame.FileImageEntryBase fimgeEntry);
+            public delegate void FileChanged(FileImageEntryBase fimgeEntry);
         }
     }
 }

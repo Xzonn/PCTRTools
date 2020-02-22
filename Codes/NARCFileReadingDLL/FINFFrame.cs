@@ -18,7 +18,7 @@ namespace NARCFileReadingDLL
     private byte m_bUnknown3;
     private byte m_bUnknown4;
     private byte m_bUnknown5;
-    private FINFFrame.Encoding m_encEncodingCode;
+    private Encoding m_encEncodingCode;
     private uint m_unCGLPOffset;
     private uint m_unCWDHOffset;
     private uint m_unCMAPOffset;
@@ -89,7 +89,7 @@ namespace NARCFileReadingDLL
       }
     }
 
-    public FINFFrame.Encoding EncodingCode
+    public Encoding EncodingCode
     {
       get
       {
@@ -147,7 +147,7 @@ namespace NARCFileReadingDLL
             m_bUnknown3 = binaryReader.ReadByte();
             m_bUnknown4 = binaryReader.ReadByte();
             m_bUnknown5 = binaryReader.ReadByte();
-            m_encEncodingCode = (FINFFrame.Encoding) binaryReader.ReadByte();
+            m_encEncodingCode = (Encoding) binaryReader.ReadByte();
             m_unCGLPOffset = binaryReader.ReadUInt32();
             m_unCWDHOffset = binaryReader.ReadUInt32();
             m_unCMAPOffset = binaryReader.ReadUInt32();

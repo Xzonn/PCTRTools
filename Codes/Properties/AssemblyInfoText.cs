@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("《精灵宝可梦》第四世代汉化修正")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("https://xzonn.github.io/PokemonChineseTranslationRevise/")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Xzonn")]
-[assembly: AssemblyProduct("PokemonCTRText")]
+[assembly: AssemblyProduct("PokemonCTRFont")]
 [assembly: AssemblyCopyright("Copyright (c) Xzonn 2018 - 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

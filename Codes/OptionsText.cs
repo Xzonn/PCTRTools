@@ -16,7 +16,7 @@ namespace PokemonCTR
         [Option('i', "import", HelpText = "Import texts from a text file.", MetaValue = "FILE")]
         public string ImportPath { get; set; }
 
-        [Option('o', "output", HelpText = "Output file path.", MetaValue = "File")]
+        [Option('o', "output", HelpText = "Output file path.", MetaValue = "FILE")]
         public string OutputPath { get; set; }
     }
 }

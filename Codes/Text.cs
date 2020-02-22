@@ -224,18 +224,18 @@ namespace PokemonCTR
             {
                 List<string> subList = TextList[i];
                 MemoryStream ms = new MemoryStream();
-                BinaryWriter br = new BinaryWriter(ms);
-                br.Write((ushort)subList.Count);
-                br.Write((ushort)OriginalKeys[i]);
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write((ushort)subList.Count);
+                bw.Write((ushort)OriginalKeys[i]);
                 int num = (OriginalKeys[i] * 0x2fd) & 0xffff, num4 = 4 + (subList.Count * 8);
                 int[] numArray = new int[subList.Count];
                 for (int j = 0; j < subList.Count; j++)
                 {
                     int num2 = (num * (j + 1)) & 0xffff;
                     int num3 = num2 | (num2 << 16);
-                    br.Write((uint)(num4 ^ num3));
+                    bw.Write((uint)(num4 ^ num3));
                     numArray[j] = GetRealSize(subList[j]);
-                    br.Write((uint)(GetRealSize(subList[j]) ^ num3));
+                    bw.Write((uint)(GetRealSize(subList[j]) ^ num3));
                     num4 += GetRealSize(subList[j]) * 2;
                 }
                 for (int k = 0; k < subList.Count; k++)
@@ -244,17 +244,17 @@ namespace PokemonCTR
                     int[] numArray2 = EncodeText(subList[k], numArray[k], charTable);
                     for (int l = 0; l < numArray[k] - 1; l++)
                     {
-                        br.Write((short)(numArray2[l] ^ num));
+                        bw.Write((short)(numArray2[l] ^ num));
                         num += 0x493d;
                         num &= 0xffff;
                     }
-                    br.Write((short)(0xffff ^ num));
+                    bw.Write((short)(0xffff ^ num));
                 }
                 byte[] bytes = new byte[ms.Position];
                 ms.Position = 0;
                 ms.Read(bytes, 0, bytes.Length);
                 files.Files[i] = bytes;
-                br.Close();
+                bw.Close();
             }
         }
 

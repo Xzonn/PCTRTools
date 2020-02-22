@@ -11,26 +11,26 @@ namespace NARCFileReadingDLL
 {
     public class FontTableItem : IFontTableItem
     {
-        private FontTableItem.Pallete[,] m_arrpltParts;
+        private readonly Pallete[,] m_arrpltParts;
         private byte m_bWidth;
 
         public FontTableItem()
         {
-            m_arrpltParts = new FontTableItem.Pallete[2, 2];
+            m_arrpltParts = new Pallete[2, 2];
             for (int index1 = 0; index1 < 2; ++index1)
             {
                 for (int index2 = 0; index2 < 2; ++index2)
-                    m_arrpltParts[index1, index2] = new FontTableItem.Pallete();
+                    m_arrpltParts[index1, index2] = new Pallete();
             }
         }
 
         public FontTableItem(BinaryReader brrReader)
         {
-            m_arrpltParts = new FontTableItem.Pallete[2, 2];
+            m_arrpltParts = new Pallete[2, 2];
             for (int index1 = 0; index1 < 2; ++index1)
             {
                 for (int index2 = 0; index2 < 2; ++index2)
-                    m_arrpltParts[index1, index2] = new FontTableItem.Pallete(brrReader);
+                    m_arrpltParts[index1, index2] = new Pallete(brrReader);
             }
         }
 
@@ -106,7 +106,7 @@ namespace NARCFileReadingDLL
 
         public void WriteTo(BinaryWriter brwWriter)
         {
-            FontTableItem.Pallete[,] arrpltParts = m_arrpltParts;
+            Pallete[,] arrpltParts = m_arrpltParts;
             int upperBound1 = arrpltParts.GetUpperBound(0);
             int upperBound2 = arrpltParts.GetUpperBound(1);
             for (int lowerBound1 = arrpltParts.GetLowerBound(0); lowerBound1 <= upperBound1; ++lowerBound1)
@@ -118,7 +118,7 @@ namespace NARCFileReadingDLL
 
         private class Pallete
         {
-            private VALUE[,] m_arrvValues;
+            private readonly VALUE[,] m_arrvValues;
 
             public Pallete()
             {

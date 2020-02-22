@@ -13,10 +13,10 @@ namespace NARCFileReadingDLL
   public class FNTBFrame : NARCFileFrame
   {
     public const string MAGIC = "FNTB";
-    private int m_nDirectoryStart;
-    private short m_sFirstFile;
-    private short m_sDirectoryCount;
-    private List<FNTBFrame.FileNameTableEntry> m_lstfntbeEntries;
+    private readonly int m_nDirectoryStart;
+    private readonly short m_sFirstFile;
+    private readonly short m_sDirectoryCount;
+    private readonly List<FileNameTableEntry> m_lstfntbeEntries;
 
     public FNTBFrame(BinaryReader brrReader, int nSize, params object[] args)
     {
@@ -40,8 +40,8 @@ namespace NARCFileReadingDLL
         case 8:
           while (nSize > 0)
           {
-                        m_lstfntbeEntries = new List<FNTBFrame.FileNameTableEntry>();
-                        m_lstfntbeEntries.Add(new FNTBFrame.FileNameTableEntry(brrReader, ref nSize));
+                        m_lstfntbeEntries = new List<FileNameTableEntry>();
+                        m_lstfntbeEntries.Add(new FileNameTableEntry(brrReader, ref nSize));
           }
           break;
         default:
@@ -64,7 +64,7 @@ namespace NARCFileReadingDLL
         int num = 8;
         if (m_nDirectoryStart == 8)
         {
-          foreach (FNTBFrame.FileNameTableEntry lstfntbeEntry in m_lstfntbeEntries)
+          foreach (FileNameTableEntry lstfntbeEntry in m_lstfntbeEntries)
             num += lstfntbeEntry.Size;
         }
         return num;
@@ -79,7 +79,7 @@ namespace NARCFileReadingDLL
       }
     }
 
-    public FNTBFrame.FileNameTableEntry[] Entries
+    public FileNameTableEntry[] Entries
     {
       get
       {
@@ -94,7 +94,7 @@ namespace NARCFileReadingDLL
       brwWriter.Write(m_sDirectoryCount);
       if (m_nDirectoryStart != 8)
         return;
-      foreach (FNTBFrame.FileNameTableEntry lstfntbeEntry in m_lstfntbeEntries)
+      foreach (FileNameTableEntry lstfntbeEntry in m_lstfntbeEntries)
         lstfntbeEntry.WriteTo(brwWriter);
     }
 

@@ -12,36 +12,36 @@ namespace NARCFileReadingDLL
 {
   public class StringTableSectionEntry : IStringTableSectionEntry
   {
-    private static readonly StringTableSectionEntry.BinaryString[] BINARY_STRINGS = new StringTableSectionEntry.BinaryString[28]
+    private static readonly BinaryString[] BINARY_STRINGS = new BinaryString[28]
     {
-      new StringTableSectionEntry.BinaryString("\\FFFE\\", "\\n"),
-      new StringTableSectionEntry.BinaryString("\\F000\\Ā\\0001\\\\0000\\", "\\Name0\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\Ā\\0001\\\\0001\\", "\\Name1\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\Ă\\0001\\\\0000\\", "\\Pokemon1\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\ā\\0001\\\\0000\\", "\\Pokemon2\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\ć\\0001\\\\0000\\", "\\Move0\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\ć\\0001\\\\0001\\", "\\Move1\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\ć\\0001\\\\0002\\", "\\Move2\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븅\\0001\\\\0001\\", "\\Speed1\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븅\\0001\\\\0003\\", "\\Speed3\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븅\\0001\\\\0005\\", "\\Speed5\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븅\\0001\\\\0006\\", "\\Speed6\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븁\\0000\\", "\\(A) Dialog\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븀\\0000\\", "\\(A)\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봂\\0001\\\\0000\\", "\\Center\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봃\\0001\\\\0000\\", "\\Right\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봀\\0003\\\\0001\\\\0002\\\\0000\\", "\\Default Shadow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봀\\0003\\\\0003\\\\0004\\\\0000\\", "\\Cyan Shadow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봀\\0003\\\\0005\\\\0006\\\\0000\\", "\\Red Shadow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\봀\\0003\\\\0007\\\\0008\\\\0000\\", "\\Black Shadow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0000\\", "\\Black\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0001\\", "\\Red\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0002\\", "\\Blue\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0003\\", "\\Yellow\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\\\FF00\\\\0001\\\\0004\\", "\\Green\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븂\\0001\\\\0014\\", "\\Small Delay\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븉\\0001\\\\0000\\", "\\Unknown0\\"),
-      new StringTableSectionEntry.BinaryString("\\F000\\븉\\0001\\\\0001\\", "\\Unknown1\\")
+      new BinaryString("\\FFFE\\", "\\n"),
+      new BinaryString("\\F000\\Ā\\0001\\\\0000\\", "\\Name0\\"),
+      new BinaryString("\\F000\\Ā\\0001\\\\0001\\", "\\Name1\\"),
+      new BinaryString("\\F000\\Ă\\0001\\\\0000\\", "\\Pokemon1\\"),
+      new BinaryString("\\F000\\ā\\0001\\\\0000\\", "\\Pokemon2\\"),
+      new BinaryString("\\F000\\ć\\0001\\\\0000\\", "\\Move0\\"),
+      new BinaryString("\\F000\\ć\\0001\\\\0001\\", "\\Move1\\"),
+      new BinaryString("\\F000\\ć\\0001\\\\0002\\", "\\Move2\\"),
+      new BinaryString("\\F000\\븅\\0001\\\\0001\\", "\\Speed1\\"),
+      new BinaryString("\\F000\\븅\\0001\\\\0003\\", "\\Speed3\\"),
+      new BinaryString("\\F000\\븅\\0001\\\\0005\\", "\\Speed5\\"),
+      new BinaryString("\\F000\\븅\\0001\\\\0006\\", "\\Speed6\\"),
+      new BinaryString("\\F000\\븁\\0000\\", "\\(A) Dialog\\"),
+      new BinaryString("\\F000\\븀\\0000\\", "\\(A)\\"),
+      new BinaryString("\\F000\\봂\\0001\\\\0000\\", "\\Center\\"),
+      new BinaryString("\\F000\\봃\\0001\\\\0000\\", "\\Right\\"),
+      new BinaryString("\\F000\\봀\\0003\\\\0001\\\\0002\\\\0000\\", "\\Default Shadow\\"),
+      new BinaryString("\\F000\\봀\\0003\\\\0003\\\\0004\\\\0000\\", "\\Cyan Shadow\\"),
+      new BinaryString("\\F000\\봀\\0003\\\\0005\\\\0006\\\\0000\\", "\\Red Shadow\\"),
+      new BinaryString("\\F000\\봀\\0003\\\\0007\\\\0008\\\\0000\\", "\\Black Shadow\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0000\\", "\\Black\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0001\\", "\\Red\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0002\\", "\\Blue\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0003\\", "\\Yellow\\"),
+      new BinaryString("\\F000\\\\FF00\\\\0001\\\\0004\\", "\\Green\\"),
+      new BinaryString("\\F000\\븂\\0001\\\\0014\\", "\\Small Delay\\"),
+      new BinaryString("\\F000\\븉\\0001\\\\0000\\", "\\Unknown0\\"),
+      new BinaryString("\\F000\\븉\\0001\\\\0001\\", "\\Unknown1\\")
     };
     private string m_strText;
     private ushort m_ushKey;
@@ -76,7 +76,7 @@ namespace NARCFileReadingDLL
           else
           {
             bool flag = false;
-            foreach (StringTableSectionEntry.BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
+            foreach (BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
             {
               if (strText.Length >= startIndex + binaryString.String.Length && strText.Substring(startIndex, binaryString.String.Length) == binaryString.String)
               {
@@ -175,7 +175,7 @@ namespace NARCFileReadingDLL
             num2 /= 16;
           }
                     m_strText += "\\";
-          foreach (StringTableSectionEntry.BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
+          foreach (BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
           {
             if (m_strText.EndsWith(binaryString.Binary))
             {
@@ -203,7 +203,7 @@ namespace NARCFileReadingDLL
           }
           else
           {
-            foreach (StringTableSectionEntry.BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
+            foreach (BinaryString binaryString in StringTableSectionEntry.BINARY_STRINGS)
             {
               if (str.Length >= startIndex - 1 + binaryString.String.Length && str.Substring(startIndex - 1, binaryString.String.Length) == binaryString.String)
               {
@@ -232,8 +232,8 @@ namespace NARCFileReadingDLL
 
     private struct BinaryString
     {
-      private string m_strBinary;
-      private string m_strString;
+      private readonly string m_strBinary;
+      private readonly string m_strString;
 
       public BinaryString(string strBinary, string strString)
       {
