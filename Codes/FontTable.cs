@@ -1,17 +1,14 @@
 ﻿using NARCFileReadingDLL;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonCTR
 {
     class FontTable
     {
         static readonly int ChineseCharStart = 0x01FE;
-        static readonly string ChinesePunctuation = "、，。？！：；“”‘’《》（）—～";
+        static readonly string ChinesePunctuation = "…、，。？！：；《》（）—～·";
         public SimpleFontTable Table;
 
         public FontTable(byte[] bytes)
@@ -47,7 +44,12 @@ namespace PokemonCTR
             for (int i = 1; i <= charTable.maxCharCode; i++)
             {
                 char c = charTable.GetCharacter(i);
-                if (ChinesePunctuation.Contains(c) || i >= ChineseCharStart)
+                if (ChinesePunctuation.Contains(c))
+                {
+                    Table.Items[i - 1].Item = DrawChar.CharToValues(c, style, FontType.MS_GOTHIC, posX: -2 + ("？！".Contains(c) ? -3: 0), posY: 2);
+                    Table.Items[i - 1].Width = 13;
+                }
+                else if (i >= ChineseCharStart)
                 {
                     Table.Items[i - 1].Item = DrawChar.CharToValues(c, style);
                     Table.Items[i - 1].Width = 13;
