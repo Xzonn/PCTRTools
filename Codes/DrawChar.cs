@@ -6,8 +6,9 @@ namespace PokemonCTR
 {
     public enum StyleType
     {
-        OUT,
-        IN
+        BOTTOM_RIGHT = 0,
+        TOP_LEFT = 1,
+        ROUND = 2
     }
 
     public enum FontType : int
@@ -34,7 +35,7 @@ namespace PokemonCTR
             }
             return b;
         }
-        static public VALUE[,] CharToValues(char c, StyleType type = StyleType.OUT, FontType fontType = FontType.SONG_TI, int posX = -2, int posY = 1)
+        static public VALUE[,] CharToValues(char c, StyleType type = StyleType.BOTTOM_RIGHT, FontType fontType = FontType.SONG_TI, int posX = -2, int posY = 1)
         {
             Bitmap b = new Bitmap(16, 16);
             Graphics g = Graphics.FromImage(b);
@@ -43,11 +44,15 @@ namespace PokemonCTR
             int x, y;
             VALUE[,] v = new VALUE[16, 16];
             for (x = 0; x < 16; x++)
+            {
                 for (y = 0; y < 16; y++)
-                    v[y, x] = (type == StyleType.OUT ? VALUE.VALUE_3 : VALUE.VALUE_0);
+                {
+                    v[y, x] = type == StyleType.TOP_LEFT ? VALUE.VALUE_0 : VALUE.VALUE_3;
+                }
+            }
             switch (type)
             {
-                case StyleType.OUT:
+                case StyleType.BOTTOM_RIGHT:
                     for (x = 0; x < 15; x++)
                     {
                         for (y = 0; y < 15; y++)
@@ -62,7 +67,7 @@ namespace PokemonCTR
                         }
                     }
                     break;
-                case StyleType.IN:
+                case StyleType.TOP_LEFT:
                     for (x = 15; x > -1; x--)
                     {
                         for (y = 14; y > -1; y--)
@@ -80,19 +85,38 @@ namespace PokemonCTR
                         }
                     }
                     break;
+                case StyleType.ROUND:
+                    for (x = 0; x < 14; x++)
+                    {
+                        for (y = 0; y < 14; y++)
+                        {
+                            if (b.GetPixel(x, y).A > 200)
+                            {
+                                v[y + 1, x + 1] = VALUE.VALUE_1;
+                                v[y, x] = v[y, x] == VALUE.VALUE_3 ? VALUE.VALUE_2 : v[y, x];
+                                v[y + 1, x] = v[y + 1, x] == VALUE.VALUE_3 ? VALUE.VALUE_2 : v[y + 1, x];
+                                v[y + 2, x] = v[y + 2, x] == VALUE.VALUE_3 ? VALUE.VALUE_2 : v[y + 2, x];
+                                v[y, x + 1] = v[y, x + 1] == VALUE.VALUE_3 ? VALUE.VALUE_2 : v[y, x + 1];
+                                v[y + 2, x + 1] = VALUE.VALUE_2;
+                                v[y, x + 2] = v[y, x + 2] == VALUE.VALUE_3 ? VALUE.VALUE_2 : v[y, x + 2];
+                                v[y + 1, x + 2] = VALUE.VALUE_2;
+                                v[y + 2, x + 2] = VALUE.VALUE_2;
+                            }
+                        }
+                    }
+                    break;
             }
             return v;
         }
 
-        static public Size ValuesToSize(VALUE[,] v, StyleType type = StyleType.OUT, int w = 16, int h = 16)
+        static public Size ValuesToSize(VALUE[,] v, StyleType type = StyleType.BOTTOM_RIGHT, int w = 16, int h = 16)
         {
-            int x, y;
-            int minX, maxX = w - 1, minY = 0, maxY = h - 1;
+            int x, y, minX, maxX, minY, maxY;
             for (minX = 0; minX < w; minX++)
             {
                 for (y = 0; y < h; y++)
                 {
-                    if ((type == StyleType.OUT && v[y, minX] != VALUE.VALUE_3) || (type == StyleType.IN && v[y, minX] != VALUE.VALUE_0))
+                    if ((type == StyleType.TOP_LEFT && v[y, minX] != VALUE.VALUE_0) || (type != StyleType.TOP_LEFT && v[y, minX] != VALUE.VALUE_3))
                     {
                         break;
                     }
@@ -106,7 +130,7 @@ namespace PokemonCTR
             {
                 for (y = 0; y < h; y++)
                 {
-                    if ((type == StyleType.OUT && v[y, maxX] != VALUE.VALUE_3) || (type == StyleType.IN && v[y, maxX] != VALUE.VALUE_0))
+                    if ((type == StyleType.TOP_LEFT && v[y, maxX] != VALUE.VALUE_0) || (type != StyleType.TOP_LEFT && v[y, maxX] != VALUE.VALUE_3))
                     {
                         break;
                     }
@@ -120,7 +144,7 @@ namespace PokemonCTR
             {
                 for (x = 0; x < w; x++)
                 {
-                    if ((type == StyleType.OUT && v[minY, x] != VALUE.VALUE_3) || (type == StyleType.IN && v[minY, x] != VALUE.VALUE_0))
+                    if ((type == StyleType.TOP_LEFT && v[minY, x] != VALUE.VALUE_0) || (type != StyleType.TOP_LEFT && v[minY, x] != VALUE.VALUE_3))
                     {
                         break;
                     }
@@ -134,7 +158,7 @@ namespace PokemonCTR
             {
                 for (x = 0; x < w; x++)
                 {
-                    if ((type == StyleType.OUT && v[maxY, x] != VALUE.VALUE_3) || (type == StyleType.IN && v[maxY, x] != VALUE.VALUE_0))
+                    if ((type == StyleType.TOP_LEFT && v[maxY, x] != VALUE.VALUE_0) || (type != StyleType.TOP_LEFT && v[maxY, x] != VALUE.VALUE_3))
                     {
                         break;
                     }

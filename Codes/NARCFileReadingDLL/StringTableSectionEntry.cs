@@ -159,7 +159,7 @@ namespace NARCFileReadingDLL
       {
         if (numArray[index1] == ushort.MaxValue)
           throw new FormatException();
-        if (numArray[index1] > 20 && numArray[index1] <= 65520 && (numArray[index1] != 61440 && char.GetUnicodeCategory((char) numArray[index1]) != UnicodeCategory.OtherNotAssigned))
+        if (numArray[index1] > 20 && numArray[index1] <= 65520 && numArray[index1] != 61440 && char.GetUnicodeCategory((char) numArray[index1]) != UnicodeCategory.OtherNotAssigned)
         {
           if (((char) numArray[index1]).ToString() == "\\")
                         m_strText += "\\";

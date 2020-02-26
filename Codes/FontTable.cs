@@ -35,7 +35,7 @@ namespace PokemonCTR
             }
         }
 
-        public byte[] Save(CharTable charTable, StyleType style = StyleType.OUT)
+        public byte[] Save(CharTable charTable, StyleType style = StyleType.BOTTOM_RIGHT)
         {
             while (Table.Items.Length <= charTable.maxCharCode)
             {
@@ -46,6 +46,7 @@ namespace PokemonCTR
                 char c = charTable.GetCharacter(i);
                 if (ChinesePunctuation.Contains(c))
                 {
+                    // DrawChar.ValuesToBitmap(Table.Items[i - 1].Item).Save($"Images/{fileNumber}_{i:X4}.png");
                     Table.Items[i - 1].Item = DrawChar.CharToValues(c, style, FontType.MS_GOTHIC, posX: -2 + ("？！".Contains(c) ? -3: 0), posY: 2);
                     Table.Items[i - 1].Width = 13;
                 }

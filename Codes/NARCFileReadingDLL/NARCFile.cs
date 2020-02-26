@@ -24,7 +24,7 @@ namespace NARCFileReadingDLL
         public NARCFile(BinaryReader brrReader)
         {
             m_strMagic = new string(brrReader.ReadChars(4));
-            if (!m_strMagic.Contains('N'.ToString()) || !m_strMagic.Contains('A'.ToString()) || (!m_strMagic.Contains('R'.ToString()) || !m_strMagic.Contains('C'.ToString())))
+            if (!m_strMagic.Contains('N'.ToString()) || !m_strMagic.Contains('A'.ToString()) || !m_strMagic.Contains('R'.ToString()) || !m_strMagic.Contains('C'.ToString()))
                 throw new FormatException();
             m_shBom = brrReader.ReadInt16();
             switch (m_shBom)
