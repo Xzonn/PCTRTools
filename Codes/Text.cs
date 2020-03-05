@@ -20,7 +20,8 @@ namespace PokemonCTR
             {
                 List<string> s = new List<string>();
                 BinaryReader br = new BinaryReader(new MemoryStream(bytes));
-                bool flag = false, flag2 = false;
+                bool flag2 = false;
+                int control = 0;
                 int stringCount = br.ReadUInt16(), originalKey = br.ReadUInt16();
                 OriginalKeys.Add(originalKey);
                 int num = (originalKey * 0x2fd) & 0xffff;
@@ -43,102 +44,113 @@ namespace PokemonCTR
                     {
                         int num4 = br.ReadUInt16();
                         num4 ^= num;
-                        if (num4 == 57344 || num4 == 9660 || num4 == 9661 || num4 == 61696 || num4 == 65534 || num4 == 65535)
+                        switch (num4)
                         {
-                            if (num4 == 57344)
+                            case 0xE000:
                                 text += "\\n";
-                            if (num4 == 9660)
+                                break;
+                            case 0x25BC:
                                 text += "\\r";
-                            if (num4 == 9661)
+                                break;
+                            case 0x25BD:
                                 text += "\\f";
-                            if (num4 == 61696)
+                                break;
+                            case 0xF100:
                                 flag2 = true;
-                            if (num4 == 65534)
-                            {
-                                text += "\\v";
-                                flag = true;
-                            }
-                        }
-                        else
-                        {
-                            if (flag)
-                            {
-                                text += Convert.ToString(num4, 16).PadLeft(4, '0');
-                                flag = false;
-                            }
-                            else
-                            {
-                                if (flag2)
+                                break;
+                            case 0xFFFE:
+                                text += "[";
+                                control = 3;
+                                break;
+                            case 0xFFFF:
+                                break;
+                            default:
+                                if (control > 0)
                                 {
-                                    int num5 = 0;
-                                    int num6 = 0;
-                                    string str = null;
-                                    while (true)
+                                    text += Convert.ToString(num4, 16).ToUpper().PadLeft(4, '0');
+                                    control--;
+                                    if (control == 0)
                                     {
-                                        if (num5 >= 15)
+                                        text += "]";
+                                    }
+                                }
+                                else
+                                {
+                                    if (flag2)
+                                    {
+                                        int num5 = 0;
+                                        int num6 = 0;
+                                        string str = null;
+                                        while (true)
                                         {
-                                            num5 -= 15;
-                                            if (num5 > 0)
+                                            if (num5 >= 15)
                                             {
-                                                int num8 = num6 | (num4 << 9 - num5 & 511);
+                                                num5 -= 15;
+                                                if (num5 > 0)
+                                                {
+                                                    int num8 = num6 | (num4 << 9 - num5 & 511);
+                                                    if ((num8 & 255) == 255)
+                                                        break;
+                                                    if (num8 != 0 && num8 != 1)
+                                                    {
+                                                        char str2 = charTable.GetCharacter(num8);
+                                                        if (str2 == '\0')
+                                                        {
+                                                            text += "\\x" + Convert.ToString(num8, 16).PadLeft(4, '0');
+                                                        }
+                                                        else
+                                                        {
+                                                            text += str2;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                int num8 = num4 >> num5 & 511;
                                                 if ((num8 & 255) == 255)
                                                     break;
                                                 if (num8 != 0 && num8 != 1)
                                                 {
-                                                    char str2 = charTable.GetCharacter(num8);
-                                                    if (str2 == '\0')
+                                                    char str3 = charTable.GetCharacter(num8);
+                                                    if (str3 == '\0')
                                                     {
                                                         text += "\\x" + Convert.ToString(num8, 16).PadLeft(4, '0');
-                                                    } else
+                                                    }
+                                                    else
                                                     {
-                                                        text += str2;
+                                                        text += str3;
                                                     }
                                                 }
+                                                num5 += 9;
+                                                if (num5 < 15)
+                                                {
+                                                    num6 = num4 >> num5 & 511;
+                                                    num5 += 9;
+                                                }
+                                                num += 18749;
+                                                num &= 65535;
+                                                num4 = br.ReadUInt16();
+                                                num4 ^= num;
+                                                k++;
                                             }
+                                        }
+                                        text += str;
+                                    }
+                                    else
+                                    {
+                                        char str3 = charTable.GetCharacter(num4);
+                                        if (str3 == '\0')
+                                        {
+                                            text += "\\x" + Convert.ToString(num4, 16).PadLeft(4, '0');
                                         }
                                         else
                                         {
-                                            int num8 = num4 >> num5 & 511;
-                                            if ((num8 & 255) == 255)
-                                                break;
-                                            if (num8 != 0 && num8 != 1)
-                                            {
-                                                char str3 = charTable.GetCharacter(num8);
-                                                if (str3 == '\0')
-                                                {
-                                                    text += "\\x" + Convert.ToString(num8, 16).PadLeft(4, '0');
-                                                } else
-                                                {
-                                                    text += str3;
-                                                }
-                                            }
-                                            num5 += 9;
-                                            if (num5 < 15)
-                                            {
-                                                num6 = num4 >> num5 & 511;
-                                                num5 += 9;
-                                            }
-                                            num += 18749;
-                                            num &= 65535;
-                                            num4 = br.ReadUInt16();
-                                            num4 ^= num;
-                                            k++;
+                                            text += str3;
                                         }
                                     }
-                                    text += str;
                                 }
-                                else
-                                {
-                                    char str3 = charTable.GetCharacter(num4);
-                                    if (str3 == '\0')
-                                    {
-                                        text += "\\x" + Convert.ToString(num4, 16).PadLeft(4, '0');
-                                    } else
-                                    {
-                                        text += str3;
-                                    }
-                                }
-                            }
+                                break;
                         }
                         num += 18749;
                         num &= 65535;
@@ -263,37 +275,34 @@ namespace PokemonCTR
             int size = 0;
             for (int i = 0; i < p.Length; i++)
             {
-                if (p[i] == '\\')
+                switch (p[i])
                 {
-                    if (p[i + 1] == 'r')
-                    {
+                    case '\\':
+                        switch (p[i + 1])
+                        {
+                            case 'r':
+                            case 'f':
+                            case 'n':
+                                size++;
+                                i++;
+                                break;
+                            case 'v':
+                                size += 2;
+                                i += 5;
+                                break;
+                            default:
+                                size++;
+                                i += 5;
+                                break;
+                        }
+                        break;
+                    case '[':
+                        size += 4;
+                        i += 13;
+                        break;
+                    default:
                         size++;
-                        i++;
-                    }
-                    else if (p[i + 1] == 'n')
-                    {
-                        size++;
-                        i++;
-                    }
-                    else if (p[i + 1] == 'f')
-                    {
-                        size++;
-                        i++;
-                    }
-                    else if (p[i + 1] == 'v')
-                    {
-                        size += 2;
-                        i += 5;
-                    }
-                    else
-                    {
-                        size++;
-                        i += 5;
-                    }
-                }
-                else
-                {
-                    size++;
+                        break;
                 }
             }
             size++;
@@ -306,54 +315,44 @@ namespace PokemonCTR
             int index = 0;
             for (int i = 0; i < str.Length; i++)
             {
-                if (str[i] == '\\')
+                switch (str[i])
                 {
-                    if (str[i + 1] == 'r')
-                    {
-                        numArray[index] = 0x25bc;
-                        i++;
-                    }
-                    else if (str[i + 1] == 'n')
-                    {
-                        numArray[index] = 0xe000;
-                        i++;
-                    }
-                    else if (str[i + 1] == 'n')
-                    {
-                        numArray[index] = 0xe000;
-                        i++;
-                    }
-                    else if (str[i + 1] == 'f')
-                    {
-                        numArray[index] = 0x25bd;
-                        i++;
-                    }
-                    else if (str[i + 1] == 'v')
-                    {
-                        numArray[index] = 0xfffe;
-                        index++;
-                        numArray[index] = Convert.ToInt32(str.Substring(i + 2, 4), 16);
-                        i += 5;
-                    }
-                    else if ((str[i + 1] == 'x') && (str[i + 2] == '0') && (str[i + 3] == '0') && (str[i + 4] == '0') && (str[i + 5] == '0'))
-                    {
-                        numArray[index] = 0;
-                        i += 5;
-                    }
-                    else if ((str[i + 1] == 'x') && (str[i + 2] == '0') && (str[i + 3] == '0') && (str[i + 4] == '0') && (str[i + 5] == '1'))
-                    {
-                        numArray[index] = 1;
-                        i += 5;
-                    }
-                    else
-                    {
-                        numArray[index] = Convert.ToInt32(str.Substring(i + 2, 4), 16);
-                        i += 5;
-                    }
-                }
-                else
-                {
-                    numArray[index] = charTable.WriteCharacter(str[i]);
+                    case '\\':
+                        switch (str[i + 1])
+                        {
+                            case 'r':
+                                numArray[index] = 0x25BC;
+                                i++;
+                                break;
+                            case 'f':
+                                numArray[index] = 0x25BD;
+                                i++;
+                                break;
+                            case 'n':
+                                numArray[index] = 0xE000;
+                                i++;
+                                break;
+                            case 'v':
+                                numArray[index++] = 0xFFFE;
+                                numArray[index] = Convert.ToInt32(str.Substring(i + 2, 4), 16);
+                                i += 5;
+                                break;
+                            case 'x':
+                                numArray[index] = Convert.ToInt32(str.Substring(i + 2, 4), 16);
+                                i += 5;
+                                break;
+                        }
+                        break;
+                    case '[':
+                        numArray[index++] = 0xFFFE;
+                        numArray[index++] = Convert.ToInt32(str.Substring(i + 1, 4), 16);
+                        numArray[index++] = Convert.ToInt32(str.Substring(i + 5, 4), 16);
+                        numArray[index] = Convert.ToInt32(str.Substring(i + 9, 4), 16);
+                        i += 13;
+                        break;
+                    default:
+                        numArray[index] = charTable.WriteCharacter(str[i]);
+                        break;
                 }
                 index++;
             }

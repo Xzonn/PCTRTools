@@ -21,8 +21,14 @@ namespace PokemonCTR
                     text.Save(ref msg, charTable);
                     msg.Save(o.OutputPath);
                 }
-                Console.WriteLine("以下字符未在码表中：" + string.Join("", charTable.NoCode));
-                Console.WriteLine("以下编码未在码表中：" + string.Join(", ", charTable.NoChar));
+                if (charTable.NoCode.Count > 0)
+                {
+                    Console.WriteLine("以下字符未在码表中：" + string.Join("", charTable.NoCode));
+                }
+                if (charTable.NoChar.Count > 0)
+                {
+                    Console.WriteLine("以下编码未在码表中：" + string.Join(", ", charTable.NoChar));
+                }
             });
         }
     }
