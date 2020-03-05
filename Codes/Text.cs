@@ -44,120 +44,139 @@ namespace PokemonCTR
                     {
                         int num4 = br.ReadUInt16();
                         num4 ^= num;
-                        if (control > 0)
+                        switch (control)
                         {
-                            text += Convert.ToString(num4, 16).ToUpper().PadLeft(4, '0');
-                            if ((control == 3) && (num4 == 0x0205 || num4 == 0x0207))
-                            {
-                                control -= 2;
-                            }
-                            else
-                            {
-                                control--;
-                            }
-                            if (control == 0)
-                            {
-                                text += "]";
-                            }
-                        }
-                        else
-                        {
-                            switch (num4)
-                            {
-                                case 0xE000:
-                                    text += "\\n";
-                                    break;
-                                case 0x25BC:
-                                    text += "\\r";
-                                    break;
-                                case 0x25BD:
-                                    text += "\\f";
-                                    break;
-                                case 0xF100:
-                                    flag2 = true;
-                                    break;
-                                case 0xFFFE:
-                                    text += "[";
-                                    control = 3;
-                                    break;
-                                case 0xFFFF:
-                                    break;
-                                default:
-                                    if (flag2)
-                                    {
-                                        int num5 = 0;
-                                        int num6 = 0;
-                                        string str = null;
-                                        while (true)
+                            case 0:
+                                switch (num4)
+                                {
+                                    case 0xE000:
+                                        text += "\\n";
+                                        break;
+                                    case 0x25BC:
+                                        text += "\\r";
+                                        break;
+                                    case 0x25BD:
+                                        text += "\\f";
+                                        break;
+                                    case 0xF100:
+                                        flag2 = true;
+                                        break;
+                                    case 0xFFFE:
+                                        text += "[";
+                                        control = 1;
+                                        break;
+                                    case 0xFFFF:
+                                        break;
+                                    default:
+                                        if (flag2)
                                         {
-                                            if (num5 >= 15)
+                                            int num5 = 0;
+                                            int num6 = 0;
+                                            string str = null;
+                                            while (true)
                                             {
-                                                num5 -= 15;
-                                                if (num5 > 0)
+                                                if (num5 >= 15)
                                                 {
-                                                    int num8 = num6 | (num4 << 9 - num5 & 511);
+                                                    num5 -= 15;
+                                                    if (num5 > 0)
+                                                    {
+                                                        int num8 = num6 | (num4 << 9 - num5 & 511);
+                                                        if ((num8 & 255) == 255)
+                                                            break;
+                                                        if (num8 != 0 && num8 != 1)
+                                                        {
+                                                            char str2 = charTable.GetCharacter(num8);
+                                                            if (str2 == '\0')
+                                                            {
+                                                                text += "\\x" + num8.ToString("X4");
+                                                            }
+                                                            else
+                                                            {
+                                                                text += str2;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    int num8 = num4 >> num5 & 511;
                                                     if ((num8 & 255) == 255)
                                                         break;
                                                     if (num8 != 0 && num8 != 1)
                                                     {
-                                                        char str2 = charTable.GetCharacter(num8);
-                                                        if (str2 == '\0')
+                                                        char str3 = charTable.GetCharacter(num8);
+                                                        if (str3 == '\0')
                                                         {
-                                                            text += "\\x" + Convert.ToString(num8, 16).PadLeft(4, '0');
+                                                            text += "\\x" + num8.ToString("X4");
                                                         }
                                                         else
                                                         {
-                                                            text += str2;
+                                                            text += str3;
                                                         }
                                                     }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                int num8 = num4 >> num5 & 511;
-                                                if ((num8 & 255) == 255)
-                                                    break;
-                                                if (num8 != 0 && num8 != 1)
-                                                {
-                                                    char str3 = charTable.GetCharacter(num8);
-                                                    if (str3 == '\0')
-                                                    {
-                                                        text += "\\x" + Convert.ToString(num8, 16).PadLeft(4, '0');
-                                                    }
-                                                    else
-                                                    {
-                                                        text += str3;
-                                                    }
-                                                }
-                                                num5 += 9;
-                                                if (num5 < 15)
-                                                {
-                                                    num6 = num4 >> num5 & 511;
                                                     num5 += 9;
+                                                    if (num5 < 15)
+                                                    {
+                                                        num6 = num4 >> num5 & 511;
+                                                        num5 += 9;
+                                                    }
+                                                    num += 18749;
+                                                    num &= 65535;
+                                                    num4 = br.ReadUInt16();
+                                                    num4 ^= num;
+                                                    k++;
                                                 }
-                                                num += 18749;
-                                                num &= 65535;
-                                                num4 = br.ReadUInt16();
-                                                num4 ^= num;
-                                                k++;
                                             }
-                                        }
-                                        text += str;
-                                    }
-                                    else
-                                    {
-                                        char str3 = charTable.GetCharacter(num4);
-                                        if (str3 == '\0')
-                                        {
-                                            text += "\\x" + Convert.ToString(num4, 16).PadLeft(4, '0');
+                                            text += str;
                                         }
                                         else
                                         {
-                                            text += str3;
+                                            char str3 = charTable.GetCharacter(num4);
+                                            if (str3 == '\0')
+                                            {
+                                                text += "\\x" + num4.ToString("X4");
+                                            }
+                                            else
+                                            {
+                                                text += str3;
+                                            }
                                         }
-                                    }
-                                    break;
-                            }
+                                        break;
+                                }
+                                break;
+                            case 1:
+                                text += num4.ToString("X4");
+                                if (num4 == 0x0129) // 不知道为何，很奇怪的控制符
+                                {
+                                    control = 3;
+                                }
+                                else
+                                {
+                                    control = 2;
+                                }
+                                break;
+                            case 2:
+                                control = -num4;
+                                if (control == 0)
+                                {
+                                    text += "]";
+                                }
+                                break;
+                            case 3:
+                                control = -num4 + 1;
+                                if (control == 0)
+                                {
+                                    text += "]";
+                                }
+                                break;
+                            default:
+                                text += "," + num4.ToString("X4");
+                                control++;
+                                if (control == 0)
+                                {
+                                    text += "]";
+                                }
+                                break;
                         }
                         num += 18749;
                         num &= 65535;
@@ -304,16 +323,10 @@ namespace PokemonCTR
                         }
                         break;
                     case '[':
-                        if (p.Substring(i + 1, 4) == "0205" || p.Substring(i + 1, 4) == "0207")
-                        {
-                            size += 3;
-                            i += 9;
-                        }
-                        else
-                        {
-                            size += 4;
-                            i += 13;
-                        }
+                        int rightPos = p.IndexOf(']', i);
+                        string[] controlText = p.Substring(i + 1, rightPos - i - 1).Split(',');
+                        size += controlText.Length + 2;
+                        i = rightPos;
                         break;
                     default:
                         size++;
@@ -359,21 +372,24 @@ namespace PokemonCTR
                         }
                         break;
                     case '[':
+                        int rightPos = str.IndexOf(']', i);
+                        string[] controlText = str.Substring(i + 1, rightPos - i - 1).Split(',');
                         numArray[index++] = 0xFFFE;
-                        numArray[index] = Convert.ToInt32(str.Substring(i + 1, 4), 16);
-                        if (numArray[index] == 0x0205 || numArray[index] == 0x0207)
+                        numArray[index++] = Convert.ToInt32(controlText[0], 16);
+                        if (controlText[0] == "0129")
                         {
-                            index++;
-                            numArray[index] = Convert.ToInt32(str.Substring(i + 5, 4), 16);
-                            i += 9;
+                            numArray[index++] = controlText.Length - 1 + 1;
                         }
                         else
                         {
-                            index++;
-                            numArray[index++] = Convert.ToInt32(str.Substring(i + 5, 4), 16);
-                            numArray[index] = Convert.ToInt32(str.Substring(i + 9, 4), 16);
-                            i += 13;
+                            numArray[index++] = controlText.Length - 1;
                         }
+                        for (int j = 1; j < controlText.Length; j++)
+                        {
+                            numArray[index++] = Convert.ToInt32(controlText[j], 16);
+                        }
+                        index--;
+                        i = rightPos;
                         break;
                     default:
                         numArray[index] = charTable.WriteCharacter(str[i]);

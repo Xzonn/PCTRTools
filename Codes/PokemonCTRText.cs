@@ -15,7 +15,8 @@ namespace PokemonCTR
                 if (o.ExtractPath != null)
                 {
                     text.Extract(o.ExtractPath);
-                } else if (o.ImportPath != null && o.OutputPath != null)
+                }
+                if (o.ImportPath != null && o.OutputPath != null)
                 {
                     text.Import(o.ImportPath);
                     text.Save(ref msg, charTable);
