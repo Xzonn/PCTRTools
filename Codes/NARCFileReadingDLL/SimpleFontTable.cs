@@ -74,18 +74,14 @@ namespace NARCFileReadingDLL
             m_bHeight = brrReader.ReadByte();
             m_bBitsPerPixel = brrReader.ReadByte();
             m_bOrientation = brrReader.ReadByte();
-            for (int i = 0; i < chineseMaxChar; i++)
+            for (int i = 0; i < m_nItemsCount; i++)
             {
                 m_lstftiItems.Add(new FontTableItem(brrReader));
             }
             brrReader.BaseStream.Position = m_nTableSize;
-            for (int i = 0; i < originalMaxChar; i++)
+            for (int i = 0; i < m_nItemsCount; i++)
             {
                 m_lstftiItems[i].ReadWidthFrom(brrReader);
-            }
-            for(int i = originalMaxChar; i < chineseMaxChar; i++)
-            {
-                m_lstftiItems[i].Width = 12;
             }
         }
 
