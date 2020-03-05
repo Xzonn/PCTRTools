@@ -21,7 +21,6 @@ namespace PokemonCTR
                 List<string> s = new List<string>();
                 BinaryReader br = new BinaryReader(new MemoryStream(bytes));
                 bool flag2 = false;
-                int control = 0;
                 int stringCount = br.ReadUInt16(), originalKey = br.ReadUInt16();
                 OriginalKeys.Add(originalKey);
                 int num = (originalKey * 0x2fd) & 0xffff;
@@ -38,44 +37,52 @@ namespace PokemonCTR
                 }
                 for (int j = 0; j < stringCount; j++)
                 {
+                    int control = 0;
                     num = (0x91bd3 * (j + 1)) & 0xffff;
                     string text = "";
                     for (int k = 0; k < numArray2[j]; k++)
                     {
                         int num4 = br.ReadUInt16();
                         num4 ^= num;
-                        switch (num4)
+                        if (control > 0)
                         {
-                            case 0xE000:
-                                text += "\\n";
-                                break;
-                            case 0x25BC:
-                                text += "\\r";
-                                break;
-                            case 0x25BD:
-                                text += "\\f";
-                                break;
-                            case 0xF100:
-                                flag2 = true;
-                                break;
-                            case 0xFFFE:
-                                text += "[";
-                                control = 3;
-                                break;
-                            case 0xFFFF:
-                                break;
-                            default:
-                                if (control > 0)
-                                {
-                                    text += Convert.ToString(num4, 16).ToUpper().PadLeft(4, '0');
-                                    control--;
-                                    if (control == 0)
-                                    {
-                                        text += "]";
-                                    }
-                                }
-                                else
-                                {
+                            text += Convert.ToString(num4, 16).ToUpper().PadLeft(4, '0');
+                            if ((control == 3) && (num4 == 0x0205 || num4 == 0x0207))
+                            {
+                                control -= 2;
+                            }
+                            else
+                            {
+                                control--;
+                            }
+                            if (control == 0)
+                            {
+                                text += "]";
+                            }
+                        }
+                        else
+                        {
+                            switch (num4)
+                            {
+                                case 0xE000:
+                                    text += "\\n";
+                                    break;
+                                case 0x25BC:
+                                    text += "\\r";
+                                    break;
+                                case 0x25BD:
+                                    text += "\\f";
+                                    break;
+                                case 0xF100:
+                                    flag2 = true;
+                                    break;
+                                case 0xFFFE:
+                                    text += "[";
+                                    control = 3;
+                                    break;
+                                case 0xFFFF:
+                                    break;
+                                default:
                                     if (flag2)
                                     {
                                         int num5 = 0;
@@ -149,8 +156,8 @@ namespace PokemonCTR
                                             text += str3;
                                         }
                                     }
-                                }
-                                break;
+                                    break;
+                            }
                         }
                         num += 18749;
                         num &= 65535;
@@ -297,8 +304,16 @@ namespace PokemonCTR
                         }
                         break;
                     case '[':
-                        size += 4;
-                        i += 13;
+                        if (p.Substring(i + 1, 4) == "0205" || p.Substring(i + 1, 4) == "0207")
+                        {
+                            size += 3;
+                            i += 9;
+                        }
+                        else
+                        {
+                            size += 4;
+                            i += 13;
+                        }
                         break;
                     default:
                         size++;
@@ -345,10 +360,20 @@ namespace PokemonCTR
                         break;
                     case '[':
                         numArray[index++] = 0xFFFE;
-                        numArray[index++] = Convert.ToInt32(str.Substring(i + 1, 4), 16);
-                        numArray[index++] = Convert.ToInt32(str.Substring(i + 5, 4), 16);
-                        numArray[index] = Convert.ToInt32(str.Substring(i + 9, 4), 16);
-                        i += 13;
+                        numArray[index] = Convert.ToInt32(str.Substring(i + 1, 4), 16);
+                        if (numArray[index] == 0x0205 || numArray[index] == 0x0207)
+                        {
+                            index++;
+                            numArray[index] = Convert.ToInt32(str.Substring(i + 5, 4), 16);
+                            i += 9;
+                        }
+                        else
+                        {
+                            index++;
+                            numArray[index++] = Convert.ToInt32(str.Substring(i + 5, 4), 16);
+                            numArray[index] = Convert.ToInt32(str.Substring(i + 9, 4), 16);
+                            i += 13;
+                        }
                         break;
                     default:
                         numArray[index] = charTable.WriteCharacter(str[i]);
