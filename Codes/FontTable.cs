@@ -9,8 +9,8 @@ namespace PokemonCTR
     {
         static readonly int ChineseCharStart = 0x01FE;
         static readonly string ChinesePunctuation = "…、，。？！：；《》（）—～·「」『』";
-        public IFontTable Table;
-        public Generation.Gen Gen;
+        public readonly IFontTable Table;
+        public readonly Generation.Gen Gen;
 
         public FontTable(byte[] bytes)
         {
@@ -89,8 +89,26 @@ namespace PokemonCTR
                             {
                                 lastFrame[originalValues[i]] = newChars[j];
                                 CGLPFrame.Character item = (CGLPFrame.Character)tempTable.Items[originalValues[i]];
-                                item.Item = DrawChar.CharToValues(newChars[j], style, font);
-                                item.Width = 12;
+                                switch (font)
+                                {
+                                    case FontType.PIXEL_9:
+                                        switch (style)
+                                        {
+                                            case StyleType.BOTTOM_RIGHT_5:
+                                                item.Item = DrawChar.CharToValues(newChars[j], style, font, posX: -2, posY: -1);
+                                                item.Width = 9;
+                                                break;
+                                            case StyleType.ROUND:
+                                                item.Item = DrawChar.CharToValues(newChars[j], style, font, posX: -1, posY: -1);
+                                                item.Width = 10;
+                                                break;
+                                        }
+                                        break;
+                                    default:
+                                        item.Item = DrawChar.CharToValues(newChars[j], style, font);
+                                        item.Width = 12;
+                                        break;
+                                }
                                 item.SpaceWidth = 0;
                                 j++;
                             }

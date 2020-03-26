@@ -15,12 +15,26 @@ namespace PokemonCTR
             {
                 CharTable charTable = new CharTable(o.ChartablePath);
                 Narc font = new Narc(o.FontPath);
-                font.Files[0] = new FontTable(font.Files[0]).Save(charTable);
-                font.Files[1] = new FontTable(font.Files[1]).Save(charTable);
-                font.Files[2] = new FontTable(font.Files[2]).Save(charTable, StyleType.TOP_LEFT);
-                if (font.Files.Count == 10) // HGSS
+                FontTable fontTable_0 = new FontTable(font.Files[0]);
+                Generation.Gen gen = fontTable_0.Gen;
+                switch (gen)
                 {
-                    font.Files[4] = new FontTable(font.Files[4]).Save(charTable, StyleType.ROUND);
+                    case Generation.Gen.Gen4:
+                        font.Files[0] = fontTable_0.Save(charTable);
+                        font.Files[1] = new FontTable(font.Files[1]).Save(charTable);
+                        font.Files[2] = new FontTable(font.Files[2]).Save(charTable, StyleType.TOP_LEFT);
+                        if (font.Files.Count == 10) // HGSS
+                        {
+                            font.Files[4] = new FontTable(font.Files[4]).Save(charTable, StyleType.ROUND);
+                        }
+                        break;
+                    case Generation.Gen.Gen5:
+                        font.Files[0] = fontTable_0.Save(charTable, StyleType.BOTTOM_RIGHT_5);
+                        font.Files[1] = new FontTable(font.Files[1]).Save(charTable, StyleType.BOTTOM_RIGHT_5, FontType.PIXEL_9);
+                        font.Files[2] = new FontTable(font.Files[2]).Save(charTable, StyleType.ROUND, FontType.PIXEL_9);
+                        break;
+                    default:
+                        return;
                 }
                 font.Save(o.OutputPath);
             });

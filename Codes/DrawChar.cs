@@ -16,14 +16,15 @@ namespace PokemonCTR
     {
         SONG_TI = 0,
         HEI_TI = 1,
-        MS_GOTHIC = 2
+        MS_GOTHIC = 2,
+        PIXEL_9 = 3
     }
 
     class DrawChar
     {
 
         static readonly Color[] Colors = { Color.FromArgb(0, 255, 255, 0), Color.FromArgb(255, 0, 0, 0), Color.FromArgb(255, 128, 128, 128), Color.FromArgb(128, 255, 0, 0) };
-        static readonly Font[] Fonts = { new Font("新宋体", 12, GraphicsUnit.Pixel), new Font("黑体", 12, GraphicsUnit.Pixel), new Font("MS Gothic", 12, GraphicsUnit.Pixel) };
+        static readonly Font[] Fonts = { new Font("新宋体", 12, GraphicsUnit.Pixel), new Font("黑体", 12, GraphicsUnit.Pixel), new Font("MS Gothic", 12, GraphicsUnit.Pixel), new Font("Zfull-GB", 9, GraphicsUnit.Pixel) };
 
         static public Bitmap ValuesToBitmap(VALUE[,] v)
         {
