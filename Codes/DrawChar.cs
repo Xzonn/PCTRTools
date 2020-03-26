@@ -24,8 +24,9 @@ namespace PokemonCTR
         static readonly Color[] Colors = { Color.FromArgb(0, 255, 255, 0), Color.FromArgb(255, 0, 0, 0), Color.FromArgb(255, 128, 128, 128), Color.FromArgb(128, 255, 0, 0) };
         static readonly Font[] Fonts = { new Font("新宋体", 12, GraphicsUnit.Pixel), new Font("黑体", 12, GraphicsUnit.Pixel), new Font("MS Gothic", 12, GraphicsUnit.Pixel) };
 
-        static public Bitmap ValuesToBitmap(VALUE[,] v, int w = 16, int h = 16)
+        static public Bitmap ValuesToBitmap(VALUE[,] v)
         {
+            int w = v.GetLength(1), h = v.GetLength(0);
             Bitmap b = new Bitmap(w, h);
             for (int x = 0; x < w; x++)
             {
@@ -36,17 +37,17 @@ namespace PokemonCTR
             }
             return b;
         }
-        static public VALUE[,] CharToValues(char c, StyleType type = StyleType.BOTTOM_RIGHT, FontType fontType = FontType.SONG_TI, int posX = -2, int posY = 1)
+        static public VALUE[,] CharToValues(char c, StyleType type = StyleType.BOTTOM_RIGHT, FontType fontType = FontType.SONG_TI, int posX = -2, int posY = 1, int w = 16, int h = 16)
         {
-            Bitmap b = new Bitmap(16, 16);
+            Bitmap b = new Bitmap(w, h);
             Graphics g = Graphics.FromImage(b);
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
             g.DrawString(c.ToString(), Fonts[(int)fontType], new SolidBrush(Color.Black), new Point(posX, posY));
             int x, y;
-            VALUE[,] v = new VALUE[16, 16];
-            for (x = 0; x < 16; x++)
+            VALUE[,] v = new VALUE[w, h];
+            for (x = 0; x < w; x++)
             {
-                for (y = 0; y < 16; y++)
+                for (y = 0; y < h; y++)
                 {
                     v[y, x] = type == StyleType.BOTTOM_RIGHT ? VALUE.VALUE_3 : VALUE.VALUE_0;
                 }
@@ -54,9 +55,9 @@ namespace PokemonCTR
             switch (type)
             {
                 case StyleType.BOTTOM_RIGHT:
-                    for (x = 0; x < 15; x++)
+                    for (x = 0; x < w - 1; x++)
                     {
-                        for (y = 0; y < 15; y++)
+                        for (y = 0; y < h - 1; y++)
                         {
                             if (b.GetPixel(x, y).A > 200)
                             {
@@ -69,9 +70,9 @@ namespace PokemonCTR
                     }
                     break;
                 case StyleType.TOP_LEFT:
-                    for (x = 15; x > -1; x--)
+                    for (x = w - 1; x > -1; x--)
                     {
-                        for (y = 14; y > -1; y--)
+                        for (y = h - 2; y > -1; y--)
                         {
                             if (b.GetPixel(x, y).A > 200)
                             {
@@ -84,9 +85,9 @@ namespace PokemonCTR
                     }
                     break;
                 case StyleType.ROUND:
-                    for (x = 0; x < 14; x++)
+                    for (x = 0; x < w - 2; x++)
                     {
-                        for (y = 0; y < 14; y++)
+                        for (y = 0; y < h - 2; y++)
                         {
                             if (b.GetPixel(x, y).A > 200)
                             {

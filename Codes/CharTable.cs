@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace PokemonCTR
 {
     class CharTable
     {
-        private readonly char[] CharTableArray = new char[65536];
-        private readonly int[] CharTableArrayRev = new int[65536];
+        private readonly Dictionary<ushort, char> _charTableDict = new Dictionary<ushort, char>();
         public readonly List<char> NoCode = new List<char>();
-        public readonly List<int> NoChar = new List<int>();
-        public int maxCharCode;
+        public readonly List<ushort> NoChar = new List<ushort>();
+        public ushort maxCharCode;
 
         /// <summary>
         /// 从码表文件路径读取码表。
@@ -27,11 +27,10 @@ namespace PokemonCTR
                     string[] ss = s.Split('\t');
                     if (ss.Length > 1)
                     {
-                        int i = Convert.ToInt32(ss[0], 16);
+                        ushort i = Convert.ToUInt16(ss[0], 16);
                         char c = ss[1][0];
-                        CharTableArray[i] = c;
-                        CharTableArrayRev[c] = i;
-                        maxCharCode = Convert.ToInt32(ss[0], 16);
+                        _charTableDict[i] = c;
+                        maxCharCode = Convert.ToUInt16(ss[0], 16);
                     }
                 }
             }
@@ -42,11 +41,11 @@ namespace PokemonCTR
         /// </summary>
         /// <param name="i">编码</param>
         /// <returns></returns>
-        public char GetCharacter(int i)
+        public char GetCharacter(ushort i)
         {
-            if (CharTableArray[i] > 0)
+            if (_charTableDict.ContainsKey(i))
             {
-                return CharTableArray[i];
+                return _charTableDict[i];
             }
             else
             {
@@ -65,9 +64,9 @@ namespace PokemonCTR
         /// <returns></returns>
         public int WriteCharacter(char c)
         {
-            if (CharTableArrayRev[c] > 0)
+            if (_charTableDict.ContainsValue(c))
             {
-                return CharTableArrayRev[c];
+                return _charTableDict.First(x => x.Value == c).Key;
             }
             else
             {
@@ -76,6 +75,22 @@ namespace PokemonCTR
                     NoCode.Add(c);
                 }
                 return 0;
+            }
+        }
+
+        public ushort[] Keys
+        {
+            get
+            {
+                return _charTableDict.Keys.ToArray();
+            }
+        }
+
+        public char[] Values
+        {
+            get
+            {
+                return _charTableDict.Values.ToArray();
             }
         }
     }

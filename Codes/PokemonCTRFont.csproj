@@ -75,11 +75,11 @@
     <Compile Include="CharTable.cs" />
     <Compile Include="DrawChar.cs" />
     <Compile Include="FontTable.cs" />
+    <Compile Include="Generation.cs" />
     <Compile Include="Narc.cs" />
     <Compile Include="OptionsFont.cs" />
     <Compile Include="PokemonCTRFont.cs" />
     <Compile Include="Properties\AssemblyInfoFont.cs" />
-    <Compile Include="Text.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
