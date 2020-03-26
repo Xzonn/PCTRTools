@@ -11,7 +11,24 @@ namespace PokemonCTR
             {
                 CharTable charTable = new CharTable(o.ChartablePath);
                 Narc msg = new Narc(o.MessagePath);
-                Text text = new Text(msg, charTable);
+                Generation.Gen gen;
+                Text text;
+                switch (msg.Files.Count)
+                {
+                    case 610: // DP
+                    case 709: // Pt
+                    case 814: // HGSS
+                        gen = Generation.Gen.Gen4;
+                        text = new Text_4(msg, charTable);
+                        break;
+                    case 273:
+                    case 472:
+                        gen = Generation.Gen.Gen5;
+                        text = new Text_5(msg, charTable);
+                        break;
+                    default:
+                        throw new FormatException();
+                }
                 if (o.ExtractPath != null)
                 {
                     text.Extract(o.ExtractPath);
@@ -19,7 +36,15 @@ namespace PokemonCTR
                 if (o.ImportPath != null && o.OutputPath != null)
                 {
                     text.Import(o.ImportPath);
-                    text.Save(ref msg, charTable);
+                    switch (gen)
+                    {
+                        case Generation.Gen.Gen4:
+                            ((Text_4)text).Save(ref msg, charTable);
+                            break;
+                        case Generation.Gen.Gen5:
+                            ((Text_5)text).Save(ref msg, charTable);
+                            break;
+                    }
                     msg.Save(o.OutputPath);
                 }
                 if (charTable.NoCode.Count > 0)

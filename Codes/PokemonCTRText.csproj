@@ -80,6 +80,8 @@
     <Compile Include="OptionsText.cs" />
     <Compile Include="PokemonCTRText.cs" />
     <Compile Include="Properties\AssemblyInfoText.cs" />
+    <Compile Include="Text_5.cs" />
+    <Compile Include="Text_4.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

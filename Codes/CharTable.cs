@@ -57,6 +57,11 @@ namespace PokemonCTR
             }
         }
 
+        public char GetCharacter(int i)
+        {
+            return GetCharacter((ushort)i);
+        }
+
         /// <summary>
         /// 将字符转换为编码。
         /// </summary>

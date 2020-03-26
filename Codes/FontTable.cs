@@ -92,17 +92,8 @@ namespace PokemonCTR
                                 switch (font)
                                 {
                                     case FontType.PIXEL_9:
-                                        switch (style)
-                                        {
-                                            case StyleType.BOTTOM_RIGHT_5:
-                                                item.Item = DrawChar.CharToValues(newChars[j], style, font, posX: -2, posY: -1);
-                                                item.Width = 9;
-                                                break;
-                                            case StyleType.ROUND:
-                                                item.Item = DrawChar.CharToValues(newChars[j], style, font, posX: -1, posY: -1);
-                                                item.Width = 10;
-                                                break;
-                                        }
+                                        item.Item = DrawChar.CharToValues(newChars[j], style, font, posX: -1, posY: -1);
+                                        item.Width = (byte)((style == StyleType.BOTTOM_RIGHT_5) ? 9 : 10);
                                         break;
                                     default:
                                         item.Item = DrawChar.CharToValues(newChars[j], style, font);
