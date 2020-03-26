@@ -193,7 +193,7 @@ namespace PokemonCTR
             }
         }
 
-        public void Save(ref Narc files, CharTable charTable)
+        new public void Save(ref Narc files, CharTable charTable)
         {
             for (int i = 0; i < files.Files.Count; i++)
             {

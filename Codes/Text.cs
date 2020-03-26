@@ -97,6 +97,16 @@ namespace PokemonCTR
         /// </summary>
         /// <param name="files">narc 文件</param>
         /// <param name="charTable">码表</param>
-        public void Save() { }
+        public void Save(ref Narc msg, CharTable charTable)
+        {
+            if (this is Text_4)
+            {
+                ((Text_4)this).Save(ref msg, charTable);
+            }
+            else if (this is Text_5)
+            {
+                ((Text_5)this).Save(ref msg);
+            }
+        }
     }
 }

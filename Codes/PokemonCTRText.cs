@@ -36,15 +36,7 @@ namespace PokemonCTR
                 if (o.ImportPath != null && o.OutputPath != null)
                 {
                     text.Import(o.ImportPath);
-                    switch (gen)
-                    {
-                        case Generation.Gen.Gen4:
-                            ((Text_4)text).Save(ref msg, charTable);
-                            break;
-                        case Generation.Gen.Gen5:
-                            ((Text_5)text).Save(ref msg, charTable);
-                            break;
-                    }
+                    text.Save(ref msg, charTable);
                     msg.Save(o.OutputPath);
                 }
                 if (charTable.NoCode.Count > 0)
