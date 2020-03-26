@@ -91,7 +91,7 @@ namespace PokemonCTR
                                 CGLPFrame.Character item = (CGLPFrame.Character)tempTable.Items[originalValues[i]];
                                 item.Item = DrawChar.CharToValues(newChars[j], style, font);
                                 item.Width = 12;
-                                item.SpaceWidth = 1;
+                                item.SpaceWidth = 0;
                                 j++;
                             }
                         }

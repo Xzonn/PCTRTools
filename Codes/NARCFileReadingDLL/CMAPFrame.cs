@@ -110,12 +110,8 @@ namespace NARCFileReadingDLL
                 if(m_dicushushIndexes.ContainsValue(cIndex))
                 {
                     m_dicushushIndexes.Remove(m_dicushushIndexes.First(x => x.Value == cIndex).Key);
-                    m_dicushushIndexes[value] = cIndex;
                 }
-                else
-                {
-                    return;
-                }
+                m_dicushushIndexes[value] = cIndex;
             }
         }
 

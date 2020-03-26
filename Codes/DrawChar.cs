@@ -8,7 +8,8 @@ namespace PokemonCTR
     {
         BOTTOM_RIGHT = 0,
         TOP_LEFT = 1,
-        ROUND = 2
+        ROUND = 2,
+        BOTTOM_RIGHT_5 = 3
     }
 
     public enum FontType : int
@@ -55,6 +56,7 @@ namespace PokemonCTR
             switch (type)
             {
                 case StyleType.BOTTOM_RIGHT:
+                case StyleType.BOTTOM_RIGHT_5:
                     for (x = 0; x < w - 1; x++)
                     {
                         for (y = 0; y < h - 1; y++)
