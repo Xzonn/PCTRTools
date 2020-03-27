@@ -11,19 +11,16 @@ namespace PokemonCTR
             {
                 CharTable charTable = new CharTable(o.ChartablePath);
                 Narc msg = new Narc(o.MessagePath);
-                Generation.Gen gen;
                 Text text;
                 switch (msg.Files.Count)
                 {
                     case 610: // DP
                     case 709: // Pt
                     case 814: // HGSS
-                        gen = Generation.Gen.Gen4;
                         text = new Text_4(msg, charTable);
                         break;
                     case 273:
                     case 472:
-                        gen = Generation.Gen.Gen5;
                         text = new Text_5(msg, charTable);
                         break;
                     default:
