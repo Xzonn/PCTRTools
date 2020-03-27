@@ -18,6 +18,11 @@ namespace PokemonCTR
             new List<List<ushort>>(),
             new List<List<ushort>>()
         };
+        private readonly List<List<List<ushort>>> OriginalLengths = new List<List<List<ushort>>>
+        {
+            new List<List<ushort>>(),
+            new List<List<ushort>>()
+        };
         new public Generation.Gen Gen
         {
             get
@@ -50,15 +55,15 @@ namespace PokemonCTR
                 for (int i = 0; i < TextList.Count; i++)
                 {
                     List<string> s = new List<string>();
-                    List<ushort> unknowns = new List<ushort>();
                     List<ushort> keys = new List<ushort>();
+                    List<ushort> unknowns = new List<ushort>();
+                    List<ushort> characterCount = new List<ushort>();
                     if (i < numSections)
                     {
                         br.BaseStream.Position = sectionOffset[i];
                         sizeSections[i] = br.ReadUInt32();
 
                         List<uint> tableOffsets = new List<uint>();
-                        List<ushort> characterCount = new List<ushort>();
                         List<List<ushort>> encText = new List<List<ushort>>();
                         for (int j = 0; j < numEntries; j++)
                         {
@@ -133,9 +138,10 @@ namespace PokemonCTR
                             s.Add(line);
                         }
                     }
-                    Unknowns[i].Add(unknowns);
-                    Keys[i].Add(keys);
                     TextList[i].Add(s);
+                    Keys[i].Add(keys);
+                    Unknowns[i].Add(unknowns);
+                    OriginalLengths[i].Add(characterCount);
                 }
             }
         }
@@ -207,12 +213,14 @@ namespace PokemonCTR
             if (size % 4 == 2)
             {
                 size += 2;
+                /*
                 ushort tmpKey = Keys[numSection][fileCount][numEntries - 1];
                 for (int k = 0; k < data[numEntries - 1].Count; k++)
                 {
                     tmpKey = (ushort)(((tmpKey << 3) | (tmpKey >> 13)) & 0xFFFF);
                 }
                 data[numEntries - 1].Add((ushort)(0xFFFF ^ tmpKey));
+                */
             }
             size += offset;
 
@@ -234,6 +242,11 @@ namespace PokemonCTR
                     bws.Write(data[k][l]);
                 }
             }
+            if (size != offset)
+            {
+                bws.Write((byte)offset);
+                bws.Write((byte)offset);
+            }
             byte[] section = new byte[mss.Position];
             mss.Position = 0;
             mss.Read(section, 0, section.Length);
@@ -244,7 +257,8 @@ namespace PokemonCTR
         private List<ushort> EncodeText(string str, int numSection, int fileCount, int numEntry)
         {
             List<ushort> chars = new List<ushort>();
-            for (int i = 0; i < str.Length; i++)
+            int i;
+            for (i = 0; i < str.Length && chars.Count < OriginalLengths[numSection][fileCount][numEntry] - 1; i++)
             {
                 switch (str[i])
                 {
@@ -302,14 +316,17 @@ namespace PokemonCTR
                         break;
                 }
             }
-            int strLength = chars.Count;
-            for (int i = 0; i < strLength; i++)
+            if (i < str.Length)
+            {
+                Console.WriteLine("文本超长：" + str);
+            }
+            for (i = chars.Count; i < OriginalLengths[numSection][fileCount][numEntry] - 1; i++)
             {
                 chars.Add(0xFFFF);
             }
             chars.Add(0xFFFF);
             ushort key = Keys[numSection][fileCount][numEntry];
-            for (int i = 0; i < chars.Count; i++)
+            for (i = 0; i < chars.Count; i++)
             {
                 chars[i] ^= key;
                 key = (ushort)(((key << 3) | (key >> 13)) & 0xFFFF);

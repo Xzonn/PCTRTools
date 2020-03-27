@@ -74,6 +74,24 @@ namespace PokemonCTR
                     break;
                 case Generation.Gen.Gen5:
                     NFTRNitroFile tempTable = (NFTRNitroFile)Table;
+                    foreach (char c in ChinesePunctuation)
+                    {
+                        ushort code = tempTable[c];
+                        if (code > 0 && code < tempTable.Items.Length)
+                        {
+                            CGLPFrame.Character item = (CGLPFrame.Character)tempTable.Items[code];
+                            switch (font)
+                            {
+                                case FontType.PIXEL_9:
+                                    item.Width = (byte)(((style == StyleType.BOTTOM_RIGHT_5) ? 9 : 10) - item.SpaceWidth);
+                                    break;
+                                default:
+                                    item.Width = (byte)(12 - item.SpaceWidth);
+                                    break;
+                            }
+                            item.SpaceWidth = 0;
+                        }
+                    }
                     CMAPFrame lastFrame = (CMAPFrame)tempTable.Frames[tempTable.FramesCount - 1];
                     char[] originalChars = lastFrame.Keys, newChars = charTable.Values;
                     ushort[] originalValues = lastFrame.Values, newValues = charTable.Keys;
