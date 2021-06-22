@@ -20,6 +20,7 @@ namespace PokemonCTR
 
         public Text_4(Narc files, CharTable charTable)
         {
+            Version = 3;
             TextList.Clear();
             TextList.Add(new List<List<string>>());
             foreach (byte[] bytes in files.Files)
@@ -59,10 +60,24 @@ namespace PokemonCTR
                                         text += "\\n";
                                         break;
                                     case 0x25BC:
-                                        text += "\\r";
+                                        if (Version > 2)
+                                        {
+                                            text += "\\f";
+                                        }
+                                        else
+                                        {
+                                            text += "\\r";
+                                        }
                                         break;
                                     case 0x25BD:
-                                        text += "\\f";
+                                        if (Version > 2)
+                                        {
+                                            text += "\\r";
+                                        }
+                                        else
+                                        {
+                                            text += "\\f";
+                                        }
                                         break;
                                     case 0xF100:
                                         flag2 = true;
@@ -274,7 +289,7 @@ namespace PokemonCTR
             return size;
         }
 
-        private static int[] EncodeText(string str, int stringSize, CharTable charTable)
+        private int[] EncodeText(string str, int stringSize, CharTable charTable)
         {
             int[] numArray = new int[stringSize - 1];
             int index = 0;
@@ -286,11 +301,25 @@ namespace PokemonCTR
                         switch (str[i + 1])
                         {
                             case 'r':
-                                numArray[index] = 0x25BC;
+                                if (Version > 2)
+                                {
+                                    numArray[index] = 0x25BD;
+                                }
+                                else
+                                {
+                                    numArray[index] = 0x25BC;
+                                }
                                 i++;
                                 break;
                             case 'f':
-                                numArray[index] = 0x25BD;
+                                if (Version > 2)
+                                {
+                                    numArray[index] = 0x25BC;
+                                }
+                                else
+                                {
+                                    numArray[index] = 0x25BD;
+                                }
                                 i++;
                                 break;
                             case 'n':

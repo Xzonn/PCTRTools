@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("《精灵宝可梦》第四、第五世代汉化修正")]
+[assembly: AssemblyTitle("《宝可梦》第四、第五世代汉化修正 - 文本")]
 [assembly: AssemblyDescription("https://xzonn.top/PokemonChineseTranslationRevise/")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Xzonn")]
 [assembly: AssemblyProduct("PokemonCTRText")]
-[assembly: AssemblyCopyright("Copyright (c) Xzonn 2018 - 2020")]
+[assembly: AssemblyCopyright("Copyright (c) Xzonn 2018 - 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值
 //通过使用 "*"，如下所示:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0")]
-[assembly: AssemblyFileVersion("2.0.0")]
+[assembly: AssemblyVersion("3.0.0")]
+[assembly: AssemblyFileVersion("3.0.0")]

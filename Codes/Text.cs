@@ -7,6 +7,7 @@ namespace PokemonCTR
     class Text
     {
         public readonly List<List<List<string>>> TextList = new List<List<List<string>>>();
+        public int Version = 0;
         public Generation.Gen Gen;
 
         /// <summary>
@@ -26,6 +27,10 @@ namespace PokemonCTR
             try
             {
                 TextWriter tw = File.CreateText(path);
+                if (this is Text_4 && Version > 0)
+                {
+                    tw.WriteLine($"#{Version}");
+                }
                 for (int i = 0; i < TextList.Count; i++)
                 {
                     for (int j = 0; j < TextList[i].Count; j++)
@@ -54,6 +59,7 @@ namespace PokemonCTR
         /// <returns>是否导入成功</returns>
         public bool Import(string path)
         {
+            Version = 0;
             try
             {
                 string[] all = File.ReadAllLines(path);
@@ -62,6 +68,11 @@ namespace PokemonCTR
                 {
                     if (all[i].Length > 0)
                     {
+                        if (all[i][0] == '#')
+                        {
+                            Version = Convert.ToInt32(all[i].Substring(1));
+                            continue;
+                        }
                         string[] line = all[i].Split('\t');
                         string[] subline = line[0].Split('-');
                         int j = Convert.ToInt32(subline[0]);
