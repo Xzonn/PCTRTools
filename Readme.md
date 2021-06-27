@@ -15,3 +15,4 @@
 - [PokeFontDS](https://github.com/TheFearsomeDzeraora/PokeFontDS)（作者：[TheFearsomeDzeraora](https://github.com/TheFearsomeDzeraora)）
 - NARCFileReadingDLL（作者：evco1）
 - [pptxt](https://projectpokemon.org/home/forums/topic/10583-pptxt-text-editing-tool/)（作者：[SCV](https://projectpokemon.org/home/profile/2-scv/)）
+- [ndstool](https://github.com/devkitPro/ndstool)（作者：Rafael Vuijk，Dave Murphy，Alexei Karpenko）
