@@ -1,6 +1,6 @@
-# 《精灵宝可梦》第四、第五世代汉化修正
+# 《宝可梦》第四、第五世代汉化修正
 
-本项目为爱好者设立的、对《精灵宝可梦》系列第四、第五世代游戏进行翻译的项目。详细说明请参见：<https://xzonn.top/PokemonChineseTranslationRevise/>。
+本项目为爱好者设立的、对《宝可梦》系列第四、第五世代游戏进行翻译的项目。详细说明请参见：<https://xzonn.top/PokemonChineseTranslationRevise/Tools.html>。
 
 本项目包含了两个分支：
 

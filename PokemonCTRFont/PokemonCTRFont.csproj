@@ -55,11 +55,11 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandLine, Version=2.7.82.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
-      <HintPath>packages\CommandLineParser.2.7.82\lib\net461\CommandLine.dll</HintPath>
+    <Reference Include="CommandLine, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.8.0\lib\net461\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -72,6 +72,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NARCFileReadingDLL\NARCFileReadingDLL.csproj">
+      <Project>{9eaa3d2b-fb4f-4da2-8548-199571be1193}</Project>
+      <Name>NARCFileReadingDLL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="CharTable.cs" />
     <Compile Include="DrawChar.cs" />
     <Compile Include="FontTable.cs" />
@@ -82,17 +88,11 @@
     <Compile Include="Properties\AssemblyInfoFont.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="..\app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="NARCFileReadingDLL\NARCFileReadingDLL.csproj">
-      <Project>{9eaa3d2b-fb4f-4da2-8548-199571be1193}</Project>
-      <Name>NARCFileReadingDLL</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="icon.ico" />
+    <Content Include="..\icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
