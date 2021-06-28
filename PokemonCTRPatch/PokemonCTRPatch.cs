@@ -51,7 +51,8 @@ namespace PokemonCTR
             ndstool.Start();
             ndstool.WaitForExit();
             // 解压补丁包
-            ZipArchive archive = new ZipArchive(File.OpenRead(patchPath));
+            FileStream archiveStream = File.OpenRead(patchPath);
+            ZipArchive archive = new ZipArchive(archiveStream);
             foreach (ZipArchiveEntry file in archive.Entries)
             {
                 string completeFileName = Path.GetFullPath(Path.Combine(tempPath, file.FullName));
@@ -69,6 +70,7 @@ namespace PokemonCTR
                     file.ExtractToFile(completeFileName, true);
                 }
             }
+            archiveStream.Close();
             // 调用ndstool打包
             ndstool.StartInfo.Arguments = "-c temp.nds -9 arm9.bin -7 arm7.bin -y9 overarm9.bin -y7 overarm7.bin -d data -y overlay -t banner.bin -h header.bin";
             ndstool.Start();
