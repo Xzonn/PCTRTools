@@ -44,10 +44,23 @@ namespace PokemonCTR
             textBox3.Text = sfd.FileName;
         }
 
+        private void ButtonConfirm_Click(object sender, EventArgs e)
+        {
+            string buttonConfirmText = buttonConfirm.Text;
+            buttonConfirm.Text = "……";
+            buttonConfirm.Enabled = false;
+            string originalPath = textBox1.Text;
+            string patchPath = textBox2.Text;
+            string outputPath = textBox3.Text;
+            PatchHelper.PatchIt(originalPath, patchPath, outputPath);
+            buttonConfirm.Text = buttonConfirmText;
+            buttonConfirm.Enabled = true;
+        }
+
         private void TextBox_DragDrop(object sender, DragEventArgs e)
         {
             string filePath = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
-            if (CheckIfFileExists(filePath))
+            if (PatchHelper.CheckIfFileExists(filePath))
             {
                 ((TextBox)sender).Text = filePath;
             }

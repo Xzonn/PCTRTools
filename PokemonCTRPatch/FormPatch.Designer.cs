@@ -139,7 +139,7 @@ namespace PokemonCTR
             this.buttonConfirm.TabIndex = 9;
             this.buttonConfirm.Text = "确认";
             this.buttonConfirm.UseVisualStyleBackColor = true;
-            this.buttonConfirm.Click += new System.EventHandler(this.PatchIt);
+            this.buttonConfirm.Click += new System.EventHandler(this.ButtonConfirm_Click);
             // 
             // label4
             // 
