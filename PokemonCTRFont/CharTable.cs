@@ -30,7 +30,7 @@ namespace PokemonCTR
                         ushort i = Convert.ToUInt16(ss[0], 16);
                         char c = ss[1][0];
                         _charTableDict[i] = c;
-                        maxCharCode = Convert.ToUInt16(ss[0], 16);
+                        maxCharCode = i > maxCharCode ? i : maxCharCode;
                     }
                 }
             }

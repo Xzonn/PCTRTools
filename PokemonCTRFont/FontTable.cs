@@ -7,7 +7,7 @@ namespace PokemonCTR
 {
     class FontTable
     {
-        static readonly int ChineseCharStart = 0x01FE;
+        static readonly int ChineseCharStart = 0x01F0;
         static readonly string ChinesePunctuation = "…、，。？！：；《》（）—～·「」『』";
         public readonly IFontTable Table;
         public readonly Generation.Gen Gen;
@@ -126,14 +126,14 @@ namespace PokemonCTR
                 default:
                     return new byte[0];
             }
-            MemoryStream ms = new MemoryStream();
-            BinaryWriter bw = new BinaryWriter(ms);
-            Table.WriteTo(bw);
-            byte[] bytes = new byte[ms.Length];
-            ms.Position = 0;
-            ms.Read(bytes, 0, bytes.Length);
-            bw.Close();
-            return bytes;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (BinaryWriter bw = new BinaryWriter(ms))
+                {
+                    Table.WriteTo(bw);
+                    return ms.ToArray();
+                }
+            }
         }
     }
 }
