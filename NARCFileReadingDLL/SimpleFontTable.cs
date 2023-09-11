@@ -13,7 +13,7 @@ namespace NARCFileReadingDLL
     public class SimpleFontTable : FIMGFrame.FileImageEntryBase, IFontTable
     {
         private readonly int chineseMaxChar = 0x119D;
-        private readonly int originalMaxChar = 0x01FD;
+        private readonly int originalMaxChar = 0x0200;
         private const int MAX_HEIGHT = 16;
         private int m_nHeaderSize;
         private int m_nTableSize;

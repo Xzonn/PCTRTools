@@ -7,7 +7,7 @@
     <ProjectGuid>{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>NARCFileReadingDLL</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <ApplicationVersion>2.2.0.0</ApplicationVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>NARCFileReadingDLL</RootNamespace>

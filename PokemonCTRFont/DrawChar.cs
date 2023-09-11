@@ -170,7 +170,6 @@ namespace PokemonCTR
                     break;
                 }
             }
-            Console.WriteLine(maxX);
             if (maxX < minX)
             {
                 maxX = minX - 1;

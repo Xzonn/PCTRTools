@@ -15,6 +15,7 @@ namespace PokemonCTR
                 switch (msg.Files.Count)
                 {
                     case 610: // DP
+                    case 624: // DP_USA
                     case 709: // Pt
                     case 814: // HGSS
                         text = new Text_4(msg, charTable);
