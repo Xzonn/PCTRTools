@@ -2,11 +2,11 @@
 
 namespace PCTRTools
 {
-    internal class Program
+  internal class Program
+  {
+    static int Main(string[] args)
     {
-        static int Main(string[] args)
-        {
-            CommandSet commands = new CommandSet("PCTRTools")
+      CommandSet commands = new CommandSet("PCTRTools")
         {
           "Usage: PCTRTools COMMAND [OPTIONS]",
           "",
@@ -17,7 +17,7 @@ namespace PCTRTools
           new ReplaceNarcCommand(),
         };
 
-            return commands.Run(args);
-        }
+      return commands.Run(args);
     }
+  }
 }
