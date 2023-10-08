@@ -1,11 +1,11 @@
 ﻿namespace PCTRTools
 {
-    internal class Generation
+  internal class Generation
+  {
+    public enum Gen
     {
-        public enum Gen
-        {
-            Gen4,
-            Gen5
-        }
+      Gen4,
+      Gen5
     }
+  }
 }
