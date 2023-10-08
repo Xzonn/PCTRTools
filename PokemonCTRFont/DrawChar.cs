@@ -1,5 +1,6 @@
 ﻿using NARCFileReadingDLL;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace PokemonCTR
@@ -24,7 +25,13 @@ namespace PokemonCTR
     {
 
         static readonly Color[] Colors = { Color.FromArgb(0, 255, 255, 0), Color.FromArgb(255, 0, 0, 0), Color.FromArgb(255, 128, 128, 128), Color.FromArgb(128, 255, 0, 0) };
-        static readonly Font[] Fonts = { new Font("新宋体", 12, GraphicsUnit.Pixel), new Font("黑体", 12, GraphicsUnit.Pixel), new Font("MS Gothic", 12, GraphicsUnit.Pixel), new Font("Zfull-GB", 9, GraphicsUnit.Pixel) };
+        static readonly Dictionary<FontType, Font> Fonts = new Dictionary<FontType, Font>
+        {
+            { FontType.SONG_TI, new Font("新宋体", 12, GraphicsUnit.Pixel) },
+            { FontType.HEI_TI, new Font("黑体", 12, GraphicsUnit.Pixel) },
+            { FontType.MS_GOTHIC, new Font("MS Gothic", 12, GraphicsUnit.Pixel) },
+            { FontType.PIXEL_9, new Font("Zfull-GB", 9, GraphicsUnit.Pixel) }
+        };
 
         static public Bitmap ValuesToBitmap(VALUE[,] v)
         {
@@ -44,7 +51,7 @@ namespace PokemonCTR
             Bitmap b = new Bitmap(w, h);
             Graphics g = Graphics.FromImage(b);
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
-            g.DrawString(c.ToString(), Fonts[(int)fontType], new SolidBrush(Color.Black), new Point(posX, posY));
+            g.DrawString(c.ToString(), Fonts[fontType], new SolidBrush(Color.Black), new Point(posX, posY));
             int x, y;
             VALUE[,] v = new VALUE[w, h];
             for (x = 0; x < w; x++)

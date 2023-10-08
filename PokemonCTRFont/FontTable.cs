@@ -8,7 +8,7 @@ namespace PokemonCTR
     class FontTable
     {
         static readonly int ChineseCharStart = 0x01F0;
-        static readonly string ChinesePunctuation = "…、，。？！：；《》（）—～·「」『』";
+        static readonly string ChinesePunctuation = "　…、，。？！：；《》（）—～·「」『』“”‘’";
         public readonly IFontTable Table;
         public readonly Generation.Gen Gen;
 
@@ -63,12 +63,12 @@ namespace PokemonCTR
                         if (ChinesePunctuation.Contains(c))
                         {
                             Table.Items[i - 1].Item = DrawChar.CharToValues(c, style, FontType.MS_GOTHIC, posX: -2 + ("？！".Contains(c) ? -3 : 0), posY: 2);
-                            Table.Items[i - 1].Width = 13;
+                            Table.Items[i - 1].Width = 12;
                         }
                         else if (i >= ChineseCharStart)
                         {
                             Table.Items[i - 1].Item = DrawChar.CharToValues(c, style, font);
-                            Table.Items[i - 1].Width = 13;
+                            Table.Items[i - 1].Width = 12;
                         }
                     }
                     break;
