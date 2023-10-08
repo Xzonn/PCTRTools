@@ -1,0 +1,3 @@
+[submodule "NARCFileReadingDLL"]
+	path = NARCFileReadingDLL
+	url = https://github.com/Xzonn/NARCFileReadingDLL.git

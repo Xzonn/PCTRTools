@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCTRTools", "PCTRTools\PCTRTools.csproj", "{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NARCFileReadingDLL", "NARCFileReadingDLL\NARCFileReadingDLL.csproj", "{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}.Debug|x64.Build.0 = Debug|Any CPU
+		{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}.Release|x64.ActiveCfg = Release|Any CPU
+		{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}.Release|x64.Build.0 = Release|Any CPU
+		{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}.Debug|x64.Build.0 = Debug|Any CPU
+		{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}.Release|x64.ActiveCfg = Release|Any CPU
+		{9EAA3D2B-FB4F-4DA2-8548-199571BE1193}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A705D69-AFD9-4745-B2BC-14F8A0D38300}
+	EndGlobalSection
+EndGlobal
