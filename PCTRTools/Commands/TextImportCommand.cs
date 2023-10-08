@@ -31,25 +31,28 @@ namespace PCTRTools
       if (_showHelp || string.IsNullOrEmpty(_inputNarc) || string.IsNullOrEmpty(_chartableFile) || string.IsNullOrEmpty(_textFile) || string.IsNullOrEmpty(_outputNarc))
       {
         int returnValue = 0;
-        if (string.IsNullOrEmpty(_inputNarc))
+        if (!_showHelp)
         {
-          CommandSet.Error.WriteLine("Input narc not provided, please supply -i or --input-narc");
-          returnValue = 1;
-        }
-        if (string.IsNullOrEmpty(_chartableFile))
-        {
-          CommandSet.Error.WriteLine("Character table file not provided, please supply -c or --chartable-file");
-          returnValue = 1;
-        }
-        if (string.IsNullOrEmpty(_textFile))
-        {
-          CommandSet.Error.WriteLine("Text file not provided, please supply -t or --text-file");
-          returnValue = 1;
-        }
-        if (string.IsNullOrEmpty(_outputNarc))
-        {
-          CommandSet.Error.WriteLine("Output narc not provided, please supply -o or --output-narc");
-          returnValue = 1;
+          if (string.IsNullOrEmpty(_inputNarc))
+          {
+            CommandSet.Error.WriteLine("Input narc not provided, please supply -i or --input-narc");
+            returnValue = 1;
+          }
+          if (string.IsNullOrEmpty(_chartableFile))
+          {
+            CommandSet.Error.WriteLine("Character table file not provided, please supply -c or --chartable-file");
+            returnValue = 1;
+          }
+          if (string.IsNullOrEmpty(_textFile))
+          {
+            CommandSet.Error.WriteLine("Text file not provided, please supply -t or --text-file");
+            returnValue = 1;
+          }
+          if (string.IsNullOrEmpty(_outputNarc))
+          {
+            CommandSet.Error.WriteLine("Output narc not provided, please supply -o or --output-narc");
+            returnValue = 1;
+          }
         }
         Options.WriteOptionDescriptions(CommandSet.Out);
         return returnValue;

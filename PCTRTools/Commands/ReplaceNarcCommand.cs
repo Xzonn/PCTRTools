@@ -31,20 +31,23 @@ namespace PCTRTools
       if (_showHelp || string.IsNullOrEmpty(_inputDirectory) || string.IsNullOrEmpty(_outputDirectory))
       {
         int returnValue = 0;
-        if (string.IsNullOrEmpty(_inputDirectory))
+        if (!_showHelp)
         {
-          CommandSet.Error.WriteLine("Input directory not provided, please supply -i or --input-narc");
-          returnValue = 1;
-        }
-        if (string.IsNullOrEmpty(_newFilesDirectory))
-        {
-          CommandSet.Error.WriteLine("New files directory not provided, please supply -n or --new-files");
-          returnValue = 1;
-        }
-        if (string.IsNullOrEmpty(_outputDirectory))
-        {
-          CommandSet.Error.WriteLine("Output directory not provided, please supply -o or --output-narc");
-          returnValue = 1;
+          if (string.IsNullOrEmpty(_inputDirectory))
+          {
+            CommandSet.Error.WriteLine("Input directory not provided, please supply -i or --input-narc");
+            returnValue = 1;
+          }
+          if (string.IsNullOrEmpty(_newFilesDirectory))
+          {
+            CommandSet.Error.WriteLine("New files directory not provided, please supply -n or --new-files");
+            returnValue = 1;
+          }
+          if (string.IsNullOrEmpty(_outputDirectory))
+          {
+            CommandSet.Error.WriteLine("Output directory not provided, please supply -o or --output-narc");
+            returnValue = 1;
+          }
         }
         Options.WriteOptionDescriptions(CommandSet.Out);
         return returnValue;
