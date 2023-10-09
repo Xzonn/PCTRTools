@@ -7,7 +7,8 @@ namespace PCTRTools
 {
   internal class FontTable
   {
-    static readonly int ChineseCharStart = 0x01F0;
+    const int CHINESE_CHAR_START = 0x01F0;
+    const byte CHINESE_CHAR_WIDTH = 12;
     static readonly string ChinesePunctuation = "　…、，。？！：；《》（）—～·「」『』“”‘’";
     public readonly IFontTable Table;
     public readonly Generation.Gen Gen;
@@ -53,22 +54,24 @@ namespace PCTRTools
       switch (Gen)
       {
         case Generation.Gen.Gen4:
+          byte charWidth = (byte)(CHINESE_CHAR_WIDTH + ((style == DrawChar.StyleType.ROUND) ? 1 : 0));
           while (Table.Items.Length <= charTable.maxCharCode)
           {
             Table.AddNewItem();
           }
+          Table.Items[0x01ac - 1].Width = charWidth;
           for (ushort i = 1; i <= charTable.maxCharCode; i++)
           {
             char c = charTable.GetCharacter(i);
             if (ChinesePunctuation.Contains(c))
             {
               Table.Items[i - 1].Item = DrawChar.CharToValues(c, style, DrawChar.FontType.MS_GOTHIC, posX: -2 + ("？！".Contains(c) ? -3 : 0), posY: 2);
-              Table.Items[i - 1].Width = 12;
+              Table.Items[i - 1].Width = charWidth;
             }
-            else if (i >= ChineseCharStart)
+            else if (i >= CHINESE_CHAR_START)
             {
               Table.Items[i - 1].Item = DrawChar.CharToValues(c, style, font);
-              Table.Items[i - 1].Width = 12;
+              Table.Items[i - 1].Width = charWidth;
             }
           }
           break;
@@ -116,7 +119,7 @@ namespace PCTRTools
                     break;
                   default:
                     item.Item = DrawChar.CharToValues(newChars[j], style, font);
-                    item.Width = 12;
+                    item.Width = CHINESE_CHAR_WIDTH;
                     break;
                 }
                 item.SpaceWidth = 0;
