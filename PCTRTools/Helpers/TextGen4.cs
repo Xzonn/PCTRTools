@@ -139,8 +139,8 @@ namespace PCTRTools
                             num6 = num4 >> num5 & 511;
                             num5 += 9;
                           }
-                          num += 18749;
-                          num &= 65535;
+                          num += 0x493d;
+                          num &= 0xffff;
                           num4 = br.ReadUInt16();
                           num4 ^= num;
                           k++;
@@ -197,8 +197,8 @@ namespace PCTRTools
                 }
                 break;
             }
-            num += 18749;
-            num &= 65535;
+            num += 0x493d;
+            num &= 0xffff;
           }
           s4.Add(text);
         }
@@ -333,24 +333,33 @@ namespace PCTRTools
                 numArray[index] = Convert.ToInt32(str.Substring(i + 2, 4), 16);
                 i += 5;
                 break;
+              default:
+                throw new FormatException($"转义字符格式错误。文本内容：{str}");
             }
             break;
           case '[':
             int rightPos = str.IndexOf(']', i);
             string[] controlText = str.Substring(i + 1, rightPos - i - 1).Split(',');
             numArray[index++] = 0xFFFE;
-            numArray[index++] = Convert.ToInt32(controlText[0], 16);
-            if (controlText[0] == "0129")
+            try
             {
-              numArray[index++] = controlText.Length - 1 + 1;
+              numArray[index++] = Convert.ToInt32(controlText[0], 16);
+              if (controlText[0] == "0129")
+              {
+                numArray[index++] = controlText.Length - 1 + 1;
+              }
+              else
+              {
+                numArray[index++] = controlText.Length - 1;
+              }
+              for (int j = 1; j < controlText.Length; j++)
+              {
+                numArray[index++] = Convert.ToInt32(controlText[j], 16);
+              }
             }
-            else
+            catch (FormatException)
             {
-              numArray[index++] = controlText.Length - 1;
-            }
-            for (int j = 1; j < controlText.Length; j++)
-            {
-              numArray[index++] = Convert.ToInt32(controlText[j], 16);
+              throw new FormatException($"控制符格式错误。文本内容：{str}");
             }
             index--;
             i = rightPos;
