@@ -1,5 +1,6 @@
 ﻿using NARCFileReadingDLL;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,7 +10,34 @@ namespace PCTRTools
   {
     const int CHINESE_CHAR_START = 0x01F0;
     const byte CHINESE_CHAR_WIDTH = 12;
-    static readonly string ChinesePunctuation = "　…、，。？！：；《》（）—～·「」『』“”‘’";
+    private class CharConfig
+    {
+      public bool Draw = true;
+      public bool MS_Gothic = true;
+      public char DrawWith = '\0';
+      public int PosX = -2, PosY = 2;
+    }
+
+    static readonly Dictionary<char, CharConfig> ChinesePunctuationConfig = new Dictionary<char, CharConfig>()
+    {
+      ['　'] = new CharConfig(),
+      ['…'] = new CharConfig(),
+      ['、'] = new CharConfig(),
+      ['，'] = new CharConfig() { PosY = 3 },
+      ['。'] = new CharConfig(),
+      ['？'] = new CharConfig() { PosX = -4, PosY = 3 },
+      ['！'] = new CharConfig() { PosX = -4, PosY = 3 },
+      ['：'] = new CharConfig() { PosX = -5, PosY = 3 },
+      ['；'] = new CharConfig() { PosX = -5, PosY = 3 },
+      ['《'] = new CharConfig() { PosX = -4 },
+      ['》'] = new CharConfig() { PosX = 0 },
+      ['（'] = new CharConfig() { PosX = -3 },
+      ['）'] = new CharConfig() { PosX = -1 },
+      ['—'] = new CharConfig() { MS_Gothic = false, DrawWith = '一', PosY = 1 },
+      ['～'] = new CharConfig() { MS_Gothic = false, PosX = -1 },
+      ['“'] = new CharConfig() { PosY = 1 },
+      ['”'] = new CharConfig() { PosY = 1 },
+    };
     public readonly IFontTable Table;
     public readonly Generation.Gen Gen;
 
@@ -63,9 +91,13 @@ namespace PCTRTools
           for (ushort i = 1; i <= charTable.maxCharCode; i++)
           {
             char c = charTable.GetCharacter(i);
-            if (ChinesePunctuation.Contains(c))
+            if (ChinesePunctuationConfig.Keys.Contains(c))
             {
-              Table.Items[i - 1].Item = DrawChar.CharToValues(c, style, DrawChar.FontType.MS_GOTHIC, posX: -2 + ("？！".Contains(c) ? -3 : 0), posY: 2);
+              var config = ChinesePunctuationConfig[c];
+              if (config.Draw)
+              {
+                Table.Items[i - 1].Item = DrawChar.CharToValues(config.DrawWith != '\0' ? config.DrawWith : c, style, config.MS_Gothic ? DrawChar.FontType.MS_GOTHIC : font, config.PosX, config.PosY);
+              }
               Table.Items[i - 1].Width = charWidth;
             }
             else if (i >= CHINESE_CHAR_START)
