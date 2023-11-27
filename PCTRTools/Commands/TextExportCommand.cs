@@ -55,18 +55,12 @@ namespace PCTRTools
       CharTable charTable = new CharTable(_chartableFile);
       NARC msg = new NARC(_inputNarc);
       Text text;
-      switch (msg.Files.Count)
+      switch (Generation.IdentifyGeneration(msg))
       {
-        case 610: // DP
-        case 624: // DP_USA
-        case 709: // Pt
-        case 814: // HGSS
+        case Generation.Gen.Gen4:
           text = new TextGen4(msg, charTable);
           break;
-        case 273:// BW a002
-        case 472:// BW a003
-        case 480:// BW2 a002
-        case 676:// BW2 a003
+        case Generation.Gen.Gen5:
           text = new TextGen5(msg);
           break;
         default:
