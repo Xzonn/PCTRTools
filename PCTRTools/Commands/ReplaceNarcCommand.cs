@@ -71,6 +71,7 @@ namespace PCTRTools
           Console.WriteLine(ex.Message);
           continue;
         }
+        bool changed = false;
         for (int i = 0; i < narc.Files.Count; i++)
         {
           var binPath = Path.Combine(pathInDiffDir, $"{i:d04}.bin");
@@ -91,7 +92,9 @@ namespace PCTRTools
             }
           }
           narc.Files[i] = newData;
+          changed = true;
         }
+        if (!changed) { continue; }
         var newPath = path.Replace(inputDirInfo.FullName, outputDirInfo.FullName);
         Directory.CreateDirectory(Path.GetDirectoryName(newPath));
         narc.Save(newPath);
