@@ -69,8 +69,10 @@ namespace PCTRTools
         case 814: // HGSS
           text = new TextGen4(msg, charTable);
           break;
-        case 273:
-        case 472:
+        case 273:// BW a002
+        case 472:// BW a003
+        case 480:// BW2 a002
+        case 676:// BW2 a003
           text = new TextGen5(msg);
           break;
         default:
