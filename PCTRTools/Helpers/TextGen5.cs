@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace PCTRTools
@@ -7,20 +8,25 @@ namespace PCTRTools
   internal class TextGen5 : Text
   {
     private readonly List<List<List<ushort>>> Keys = new List<List<List<ushort>>>
-        {
-            new List<List<ushort>>(),
-            new List<List<ushort>>()
-        };
+    {
+      new List<List<ushort>>(),
+      new List<List<ushort>>()
+    };
     private readonly List<List<List<ushort>>> Unknowns = new List<List<List<ushort>>>
-        {
-            new List<List<ushort>>(),
-            new List<List<ushort>>()
-        };
+    {
+      new List<List<ushort>>(),
+      new List<List<ushort>>()
+    };
+    private readonly List<List<byte>> Unknowns2 = new List<List<byte>>
+    {
+      new List<byte>(),
+      new List<byte>()
+    };
     private readonly List<List<List<ushort>>> OriginalLengths = new List<List<List<ushort>>>
-        {
-            new List<List<ushort>>(),
-            new List<List<ushort>>()
-        };
+    {
+      new List<List<ushort>>(),
+      new List<List<ushort>>()
+    };
     new public Generation.Gen Gen
     {
       get
@@ -37,24 +43,22 @@ namespace PCTRTools
       foreach (byte[] bytes in files.Files)
       {
         BinaryReader br = new BinaryReader(new MemoryStream(bytes));
-        ushort numSections, numEntries, tmpCharCount, tmpUnknown, tmpChar;
-        uint unk1, tmpOffset;
-        uint[] sizeSections = new uint[] { 0, 0 };
-        uint[] sectionOffset = new uint[] { 0, 0 };
-        ushort key;
-        numSections = br.ReadUInt16();
-        numEntries = br.ReadUInt16();
-        sizeSections[0] = br.ReadUInt32();
-        unk1 = br.ReadUInt32();
+        uint[] sizeSections = { 0, 0 };
+        uint[] sectionOffset = { 0, 0 };
+        ushort numSections = br.ReadUInt16();
+        ushort numEntries = br.ReadUInt16();
+        br.ReadUInt32();
+        br.ReadUInt32();
         for (int i = 0; i < numSections; i++)
         {
           sectionOffset[i] = br.ReadUInt32();
         }
         for (int i = 0; i < TextList.Count; i++)
         {
-          List<string> s = new List<string>();
+          List<string> strings = new List<string>();
           List<ushort> keys = new List<ushort>();
           List<ushort> unknowns = new List<ushort>();
+          byte unk2 = 0;
           List<ushort> characterCount = new List<ushort>();
           if (i < numSections)
           {
@@ -65,24 +69,20 @@ namespace PCTRTools
             List<List<ushort>> encText = new List<List<ushort>>();
             for (int j = 0; j < numEntries; j++)
             {
-              tmpOffset = br.ReadUInt32();
-              tmpCharCount = br.ReadUInt16();
-              tmpUnknown = br.ReadUInt16();
-              tableOffsets.Add(tmpOffset);
-              characterCount.Add(tmpCharCount);
-              unknowns.Add(tmpUnknown);
+              tableOffsets.Add(br.ReadUInt32());
+              characterCount.Add(br.ReadUInt16());
+              unknowns.Add(br.ReadUInt16());
             }
             for (int j = 0; j < numEntries; j++)
             {
-              List<ushort> tmpEncChars = new List<ushort>();
               br.BaseStream.Position = sectionOffset[i] + tableOffsets[j];
-              for (int k = 0; k < characterCount[j]; k++)
+              List<ushort> tmpEncChars = new List<ushort>();
+              while (tmpEncChars.Count < characterCount[j])
               {
-                tmpChar = br.ReadUInt16();
-                tmpEncChars.Add(tmpChar);
+                tmpEncChars.Add(br.ReadUInt16());
               }
               encText.Add(tmpEncChars);
-              key = (ushort)(encText[j][characterCount[j] - 1] ^ 0xFFFF);
+              ushort key = (ushort)(encText[j][characterCount[j] - 1] ^ 0xFFFF);
               for (int k = characterCount[j] - 1; k >= 0; k--)
               {
                 encText[j][k] ^= key;
@@ -93,23 +93,23 @@ namespace PCTRTools
                 key = (ushort)(((key >> 3) | (key << 13)) & 0xFFFF);
               }
               string line = "";
-              for (int k = 0; k < characterCount[j]; k++)
+              for (int charPos = 0; charPos < characterCount[j]; charPos++)
               {
-                if (encText[j][k] > 20 && encText[j][k] <= 0xFFF0 && encText[j][k] != 0xF000)
+                if (encText[j][charPos] > 20 && encText[j][charPos] <= 0xFFF0 && encText[j][charPos] != 0xF000)
                 {
-                  line += (char)encText[j][k];
+                  line += (char)encText[j][charPos];
                 }
-                else if (encText[j][k] == 0xFFFE)
+                else if (encText[j][charPos] == 0xFFFE)
                 {
                   line += "\\n";
                 }
-                else if (encText[j][k] == 0xFFFF)
+                else if (encText[j][charPos] == 0xFFFF)
                 {
                   // line += "\\xFFFF";
                 }
-                else if (encText[j][k] == 0xF000)
+                else if (encText[j][charPos] == 0xF000)
                 {
-                  switch (encText[j][k + 1])
+                  switch (encText[j][charPos + 1])
                   {
                     case 0xBE00:
                       line += "\\r";
@@ -118,27 +118,35 @@ namespace PCTRTools
                       line += "\\f";
                       break;
                     default:
-                      line += $"[{encText[j][k + 1]:X4}";
-                      for (int control = 0; control < encText[j][k + 2]; control++)
+                      line += $"[{encText[j][charPos + 1]:X4}";
+                      for (int control = 0; control < encText[j][charPos + 2]; control++)
                       {
-                        line += $",{encText[j][k + 3 + control]:X4}";
+                        line += $",{encText[j][charPos + 3 + control]:X4}";
                       }
                       line += "]";
                       break;
                   }
-                  k += 2 + encText[j][k + 2];
+                  charPos += 2 + encText[j][charPos + 2];
                 }
                 else
                 {
-                  line += $"\\x{encText[j][k]:X4}";
+                  line += $"\\x{encText[j][charPos]:X4}";
                 }
               }
-              s.Add(line);
+              strings.Add(line);
+            }
+
+            if (br.BaseStream.Position - sectionOffset[i] != sizeSections[i])
+            {
+              unk2 = br.ReadByte();
+              Debug.Assert(unk2 == br.ReadByte());
             }
           }
-          TextList[i].Add(s);
+
+          TextList[i].Add(strings);
           Keys[i].Add(keys);
           Unknowns[i].Add(unknowns);
+          Unknowns2[i].Add(unk2);
           OriginalLengths[i].Add(characterCount);
         }
       }
@@ -157,7 +165,7 @@ namespace PCTRTools
         uint[] newsizeSections = { 0, 0 };
 
         ushort numSections = br.ReadUInt16(), numEntries = br.ReadUInt16();
-        sizeSections[0] = br.ReadUInt32();
+        br.ReadUInt32();
         uint unk1 = br.ReadUInt32();
 
         List<byte[]> newEntries = new List<byte[]>();
@@ -189,10 +197,7 @@ namespace PCTRTools
           bw.Write(newEntries[j]);
         }
 
-        byte[] bytes = new byte[ms.Position];
-        ms.Position = 0;
-        ms.Read(bytes, 0, bytes.Length);
-        files.Files[i] = bytes;
+        files.Files[i] = ms.ToArray();
         bw.Close();
         br.Close();
       }
@@ -213,7 +218,7 @@ namespace PCTRTools
         size += 2;
         /*
         ushort tmpKey = Keys[numSection][fileCount][numEntries - 1];
-        for (int k = 0; k < data[numEntries - 1].Count; k++)
+        for (int charPos = 0; charPos < data[numEntries - 1].Count; charPos++)
         {
             tmpKey = (ushort)(((tmpKey << 3) | (tmpKey >> 13)) & 0xFFFF);
         }
@@ -242,14 +247,10 @@ namespace PCTRTools
       }
       if (size != offset)
       {
-        bws.Write((byte)offset);
-        bws.Write((byte)offset);
+        bws.Write(Unknowns2[numSection][fileCount]);
+        bws.Write(Unknowns2[numSection][fileCount]);
       }
-      byte[] section = new byte[mss.Position];
-      mss.Position = 0;
-      mss.Read(section, 0, section.Length);
-      mss.Close();
-      return section;
+      return mss.ToArray();
     }
 
     private List<ushort> EncodeText(string str, int numSection, int fileCount, int numEntry)

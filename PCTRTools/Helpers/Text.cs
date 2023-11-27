@@ -64,36 +64,35 @@ namespace PCTRTools
       {
         string[] all = File.ReadAllLines(path);
         int currentBin = 0, currentType = 0;
-        for (int i = 0; i < all.Length; i++)
+        foreach (string line in all)
         {
-          if (all[i].Length > 0)
+          if (line == "") { continue; }
+          if (line[0] == '#')
           {
-            if (all[i][0] == '#')
+            Version = Convert.ToInt32(line.Substring(1));
+            continue;
+          }
+          string[] splited = line.Split('\t');
+          string[] subline = splited[0].Split('-');
+          int j = Convert.ToInt32(subline[0]);
+          if (splited.Length == 1)
+          {
+            currentBin = j;
+            if (subline.Length == 2)
             {
-              Version = Convert.ToInt32(all[i].Substring(1));
-              continue;
-            }
-            string[] line = all[i].Split('\t');
-            string[] subline = line[0].Split('-');
-            int j = Convert.ToInt32(subline[0]);
-            if (line.Length == 1)
-            {
-              currentBin = j;
-              if (subline.Length == 2)
-              {
-                currentType = Convert.ToInt32(subline[1]);
-              }
-              else
-              {
-                currentType = 0;
-              }
+              currentType = Convert.ToInt32(subline[1]);
             }
             else
             {
-              TextList[currentType][currentBin][j] = line[1];
+              currentType = 0;
             }
           }
+          else
+          {
+            TextList[currentType][currentBin][j] = splited[1];
+          }
         }
+
         return true;
       }
       catch (IOException ex)
