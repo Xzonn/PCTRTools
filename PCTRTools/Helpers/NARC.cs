@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace PCTRTools
 {
@@ -133,7 +134,7 @@ namespace PCTRTools
       try
       {
         Directory.CreateDirectory(Path.GetDirectoryName(path));
-        BinaryWriter br = new BinaryWriter(File.Create(path));
+        BinaryWriter bw = new BinaryWriter(File.Create(path));
         int i;
         uint position = 0;
         for (i = 0; i < fatbHeader.num_entries; i++)
@@ -141,60 +142,54 @@ namespace PCTRTools
           fatbEntries[i].file_from_offset = position;
           fatbEntries[i].file_to_offset = position + (uint)Files[i].Length;
           position += (uint)Files[i].Length;
+          position = (position + 3) / 4 * 4;
         }
-        position = (position + 15) / 16 * 16;
-        fimgHeader.length = position - 8;
-        narcHeader.file_size = narcHeader.length + fatbHeader.length + fntbHeader.length + position;
+        fimgHeader.length = position + 8;
+        narcHeader.file_size = narcHeader.length + fatbHeader.length + fntbHeader.length + fimgHeader.length;
         /* NarcHeader */
-        br.Write(narcHeader.id);
-        br.Write(narcHeader.id0);
-        br.Write(narcHeader.id1);
-        br.Write(narcHeader.file_size);
-        br.Write(narcHeader.length);
-        br.Write(narcHeader.num_sections);
+        bw.Write(narcHeader.id);
+        bw.Write(narcHeader.id0);
+        bw.Write(narcHeader.id1);
+        bw.Write(narcHeader.file_size);
+        bw.Write(narcHeader.length);
+        bw.Write(narcHeader.num_sections);
         /* FatbHeader */
-        br.Write(fatbHeader.id);
-        br.Write(fatbHeader.length);
-        br.Write(fatbHeader.num_entries);
+        bw.Write(fatbHeader.id);
+        bw.Write(fatbHeader.length);
+        bw.Write(fatbHeader.num_entries);
         /* FatbEntries */
         for (i = 0; i < fatbHeader.num_entries; i++)
         {
-          br.Write(fatbEntries[i].file_from_offset);
-          br.Write(fatbEntries[i].file_to_offset);
+          bw.Write(fatbEntries[i].file_from_offset);
+          bw.Write(fatbEntries[i].file_to_offset);
         }
         /* FntbHeader */
-        br.Write(fntbHeader.id);
-        br.Write(fntbHeader.length);
-        br.Write(fntbHeader.unknown0);
-        br.Write(fntbHeader.unknown1);
+        bw.Write(fntbHeader.id);
+        bw.Write(fntbHeader.length);
+        bw.Write(fntbHeader.unknown0);
+        bw.Write(fntbHeader.unknown1);
         /* FntbEntries */
         if (fntbHeader.unknown0 == 8)
         {
           for (i = 0; i < fatbHeader.num_entries; i++)
           {
-            br.Write(fntbEntries[i].name_length);
-            br.Write(fntbEntries[i].name, 0, fntbEntries[i].name_length);
+            bw.Write(fntbEntries[i].name_length);
+            bw.Write(fntbEntries[i].name, 0, fntbEntries[i].name_length);
           }
-          br.Write((byte)0);
-          while (br.BaseStream.Position < narcHeader.length + fatbHeader.length + fntbHeader.length)
-          {
-            br.Write((byte)255);
-          }
+          bw.Write((byte)0);
+          bw.Write(Enumerable.Repeat((byte)0xFF, (int)(bw.BaseStream.Position - (narcHeader.length + fatbHeader.length + fntbHeader.length))).ToArray());
         }
-        br.BaseStream.Position = narcHeader.length + fatbHeader.length + fntbHeader.length;
+        bw.BaseStream.Position = narcHeader.length + fatbHeader.length + fntbHeader.length;
         /* FimgHeader */
-        br.Write(fimgHeader.id);
-        br.Write(fimgHeader.length);
+        bw.Write(fimgHeader.id);
+        bw.Write(fimgHeader.length);
         /* Files */
         for (i = 0; i < fatbHeader.num_entries; i++)
         {
-          br.Write(Files[i]);
+          bw.Write(Files[i]);
+          bw.Write(Enumerable.Repeat((byte)0xFF, (int)(4 - bw.BaseStream.Position % 4) % 4).ToArray());
         }
-        while (br.BaseStream.Position < narcHeader.file_size)
-        {
-          br.Write((byte)255);
-        }
-        br.Close();
+        bw.Close();
         return true;
       }
       catch (IOException ex)
