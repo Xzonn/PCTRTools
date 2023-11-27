@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace PCTRTools
 {
@@ -185,7 +186,7 @@ namespace PCTRTools
         }
         bw.Write(numSections);
         bw.Write(numEntries);
-        bw.Write(newsizeSections[0]);
+        bw.Write(newsizeSections.Max());
         bw.Write(unk1);
         bw.Write(sectionOffset[0]);
         if (numSections == 2)
