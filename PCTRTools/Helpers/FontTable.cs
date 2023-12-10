@@ -87,7 +87,7 @@ namespace PCTRTools
           {
             Table.AddNewItem();
           }
-          Table.Items[0x01ac - 1].Width = charWidth;
+          Table.Items[0x01fb - 1].Width = charWidth;
           for (ushort i = 1; i <= charTable.maxCharCode; i++)
           {
             char c = charTable.GetCharacter(i);
@@ -109,9 +109,10 @@ namespace PCTRTools
           break;
         case Generation.Gen.Gen5:
           NFTRNitroFile tempTable = (NFTRNitroFile)Table;
-          /*
-          foreach (char c in ChinesePunctuation)
+          foreach (var pair in ChinesePunctuationConfig)
           {
+            char c = pair.Key;
+            var config = pair.Value;
             ushort code = tempTable[c];
             if (code > 0 && code < tempTable.Items.Length)
             {
@@ -119,17 +120,18 @@ namespace PCTRTools
               switch (font)
               {
                 case DrawChar.FontType.PIXEL_9:
-                  item.Width = (byte)(((style == DrawChar.StyleType.BOTTOM_RIGHT_5) ? 9 : 10) - item.SpaceWidth);
+                  // item.Width = (byte)(((style == DrawChar.StyleType.BOTTOM_RIGHT_5) ? 9 : 10) - item.SpaceWidth);
                   break;
                 default:
-                  item.Width = (byte)(12 - item.SpaceWidth);
+                  item.Item = DrawChar.CharToValues(config.DrawWith != '\0' ? config.DrawWith : c, style, config.MS_Gothic ? DrawChar.FontType.MS_GOTHIC : font, config.PosX, config.PosY);
+                  item.SpaceWidth = 1;
+                  item.Width = CHINESE_CHAR_WIDTH;
                   break;
               }
             }
           }
-          */
           CMAPFrame lastFrame = (CMAPFrame)tempTable.Frames[tempTable.FramesCount - 1];
-          char[] originalChars = lastFrame.Keys, newChars = charTable.Values;
+          char[] originalChars = lastFrame.Keys, newChars = charTable.Values.OrderBy(c => c).ToArray();
           ushort[] originalValues = lastFrame.Values, newValues = charTable.Keys;
           for (ushort i = 0, j = 0; i < originalChars.Length && j < newChars.Length; i++)
           {

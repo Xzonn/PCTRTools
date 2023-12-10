@@ -35,6 +35,7 @@ namespace PCTRTools
         {
           for (int j = 0; j < TextList[i].Count; j++)
           {
+            if (TextList[i][j].Count == 0) { continue; }
             tw.WriteLine($"{j}" + (this is TextGen5 ? $"-{i}" : ""));
             for (int k = 0; k < TextList[i][j].Count; k++)
             {
