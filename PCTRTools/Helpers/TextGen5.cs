@@ -217,14 +217,12 @@ namespace PCTRTools
       if (size % 4 == 2)
       {
         size += 2;
-        /*
         ushort tmpKey = Keys[numSection][fileCount][numEntries - 1];
         for (int charPos = 0; charPos < data[numEntries - 1].Count; charPos++)
         {
             tmpKey = (ushort)(((tmpKey << 3) | (tmpKey >> 13)) & 0xFFFF);
         }
         data[numEntries - 1].Add((ushort)(0xFFFF ^ tmpKey));
-        */
       }
       size += offset;
 
@@ -258,7 +256,7 @@ namespace PCTRTools
     {
       List<ushort> chars = new List<ushort>();
       int i;
-      for (i = 0; i < str.Length && chars.Count < OriginalLengths[numSection][fileCount][numEntry] - 1; i++)
+      for (i = 0; i < str.Length; i++)
       {
         switch (str[i])
         {
@@ -315,14 +313,6 @@ namespace PCTRTools
             chars.Add(str[i]);
             break;
         }
-      }
-      if (i < str.Length)
-      {
-        Console.WriteLine("文本超长：" + str);
-      }
-      for (i = chars.Count; i < OriginalLengths[numSection][fileCount][numEntry] - 1; i++)
-      {
-        chars.Add(0xFFFF);
       }
       chars.Add(0xFFFF);
       ushort key = Keys[numSection][fileCount][numEntry];

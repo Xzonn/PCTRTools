@@ -112,6 +112,7 @@ namespace PCTRTools
           foreach (var pair in ChinesePunctuationConfig)
           {
             char c = pair.Key;
+            if (c == '　') { continue; }
             var config = pair.Value;
             ushort code = tempTable[c];
             if (code > 0 && code < tempTable.Items.Length)
@@ -124,8 +125,9 @@ namespace PCTRTools
                   break;
                 default:
                   item.Item = DrawChar.CharToValues(config.DrawWith != '\0' ? config.DrawWith : c, style, config.MS_Gothic ? DrawChar.FontType.MS_GOTHIC : font, config.PosX, config.PosY);
-                  item.SpaceWidth = 1;
+                  item.SpaceWidth = 0;
                   item.Width = CHINESE_CHAR_WIDTH;
+                  item.SpaceAfter = 0;
                   break;
               }
             }
@@ -157,6 +159,7 @@ namespace PCTRTools
                     break;
                 }
                 item.SpaceWidth = 0;
+                item.SpaceAfter = 0;
                 j++;
               }
             }
