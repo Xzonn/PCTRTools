@@ -1,0 +1,29 @@
+name: Build on push
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - run: nuget restore
+
+      - name: Build
+        run: msbuild /p:Configuration=Release /verbosity:minimal
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PCTRTools
+          path: PCTRTools/bin/Release
