@@ -16,6 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: microsoft/setup-msbuild@v2
       - run: nuget restore
 
