@@ -1,77 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{33BFBBB8-8A3C-41EE-823E-A60465A4F1A2}</ProjectGuid>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <RootNamespace>PCTRTools</RootNamespace>
-    <AssemblyName>PCTRTools</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <AssemblyTitle>《宝可梦》第四、第五世代汉化修正工具</AssemblyTitle>
+    <Description>https://xzonn.top/PokemonChineseTranslationRevise/</Description>
+    <Company>Xzonn</Company>
+    <Product>PCTRTools</Product>
+    <Copyright>Copyright (c) Xzonn 2018-</Copyright>
+    <AssemblyVersion>4.0.0</AssemblyVersion>
+    <FileVersion>4.0.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Commands\FontCommand.cs" />
-    <Compile Include="Commands\ReplaceNarcCommand.cs" />
-    <Compile Include="Commands\TextExportCommand.cs" />
-    <Compile Include="Commands\TextImportCommand.cs" />
-    <Compile Include="Helpers\CharTable.cs" />
-    <Compile Include="Helpers\CompressHelper.cs" />
-    <Compile Include="Helpers\DrawChar.cs" />
-    <Compile Include="Helpers\FontTable.cs" />
-    <Compile Include="Helpers\Generation.cs" />
-    <Compile Include="Helpers\NARC.cs" />
-    <Compile Include="Helpers\Text.cs" />
-    <Compile Include="Helpers\TextGen4.cs" />
-    <Compile Include="Helpers\TextGen5.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\.editorconfig" />
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NARCFileReadingDLL\NARCFileReadingDLL.csproj">
-      <Project>{9eaa3d2b-fb4f-4da2-8548-199571be1193}</Project>
-      <Name>NARCFileReadingDLL</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\NARCFileReadingDLL\NARCFileReadingDLL.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
@@ -87,15 +34,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms">
-      <Version>7.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="NETStandard.Library">
-      <Version>2.0.3</Version>
+      <Version>8.0.0-preview.7.23375.6</Version>
     </PackageReference>
     <PackageReference Include="Mono.Options">
       <Version>6.12.0.148</Version>
     </PackageReference>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
+    <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
+  </ItemGroup>
 </Project>
