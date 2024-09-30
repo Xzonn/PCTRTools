@@ -1,23 +1,15 @@
 ﻿using Mono.Options;
+using PCTRTools.Commands;
 
-namespace PCTRTools
+CommandSet commands = new("PCTRTools")
 {
-  internal class Program
-  {
-    static int Main(string[] args)
-    {
-      CommandSet commands = new CommandSet("PCTRTools")
-        {
-          "Usage: PCTRTools COMMAND [OPTIONS]",
-          "",
-          "Available commands:",
-          new FontCommand(),
-          new TextImportCommand(),
-          new TextExportCommand(),
-          new ReplaceNarcCommand(),
-        };
+  "Usage: PCTRTools COMMAND [OPTIONS]",
+  "",
+  "Available commands:",
+  new FontCommand(),
+  new TextImportCommand(),
+  new TextExportCommand(),
+  new ReplaceNarcCommand(),
+};
 
-      return commands.Run(args);
-    }
-  }
-}
+return commands.Run(args);
