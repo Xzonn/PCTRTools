@@ -10,6 +10,7 @@ CommandSet commands = new("PCTRTools")
   new TextImportCommand(),
   new TextExportCommand(),
   new ReplaceNarcCommand(),
+  new AppendNarcCommand(),
 };
 
 return commands.Run(args);
