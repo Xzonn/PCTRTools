@@ -6,7 +6,7 @@ namespace PCTRTools.Commands;
 
 public class TextImportCommand : Command
 {
-  private string _inputNarc, _chartableFile, _textFile, _outputNarc;
+  private string _inputNarc, _chartableFile, _textFile, _outputNarc, _generation;
   private bool _showHelp;
 
   public TextImportCommand() : base("text-import", "Import text file")
@@ -20,6 +20,7 @@ public class TextImportCommand : Command
       { "c|chartable-file=", "Character table file path", c => _chartableFile = c },
       { "t|text-file=", "Text file path", t => _textFile = t},
       { "o|output-narc=", "Output narc path", o => _outputNarc = o},
+      { "g|generation=", "Specify generation version", g => _generation = g.Trim()},
       { "h|help", "Shows this help screen", h => _showHelp = true },
     };
   }
@@ -60,18 +61,18 @@ public class TextImportCommand : Command
 
     CharTable charTable = new(_chartableFile);
     NARC msg = new(_inputNarc);
-    Text text;
-    switch (Generation.IdentifyGeneration(msg))
+    Generation.Gen gen = _generation switch
     {
-      case Generation.Gen.Gen4:
-        text = new TextGen4(msg, charTable);
-        break;
-      case Generation.Gen.Gen5:
-        text = new TextGen5(msg);
-        break;
-      default:
-        throw new FormatException();
-    }
+      "4" => Generation.Gen.Gen4,
+      "5" => Generation.Gen.Gen5,
+      _ => Generation.IdentifyGeneration(msg),
+    };
+    Text text = gen switch
+    {
+      Generation.Gen.Gen4 => new TextGen4(msg, charTable),
+      Generation.Gen.Gen5 => new TextGen5(msg),
+      _ => throw new FormatException("Unknown generation, please specify through \"-g 4\" or \"-g 5\"."),
+    };
     text.Import(_textFile);
     text.Save(ref msg, charTable);
     msg.Save(_outputNarc);
