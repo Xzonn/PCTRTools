@@ -22,10 +22,26 @@ jobs:
       - run: nuget restore
 
       - name: Build
-        run: msbuild /p:Configuration=Release /verbosity:minimal
+        run: |
+          msbuild /p:Configuration=Release /verbosity:minimal
+          Compress-Archive -Path "PCTRTools/bin/Release" -DestinationPath "PCTRTools/bin/Release.zip" -Force
 
       - name: Upload Artifact
+        if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
         uses: actions/upload-artifact@v4
         with:
           name: PCTRTools
           path: PCTRTools/bin/Release
+
+      - name: GitHub Release
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: "PCTRTools/bin/Release.zip"
+          body: |
+            开发版本。
+          name: "${{ steps.commit.outputs.commit_message }}"
+          prerelease: true
+          tag: dev-pub
+          token: ${{ secrets.GITHUB_TOKEN }}
